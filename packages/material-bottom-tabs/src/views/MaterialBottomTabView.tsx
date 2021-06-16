@@ -1,16 +1,17 @@
-import * as React from 'react';
-import { Text, StyleSheet, Platform } from 'react-native';
-import { BottomNavigation, DefaultTheme, DarkTheme } from 'react-native-paper';
+import { SafeAreaProviderCompat } from '@react-navigation/elements';
 import {
-  NavigationHelpersContext,
-  Route,
-  TabNavigationState,
-  TabActions,
-  useTheme,
-  useLinkBuilder,
   Link,
   ParamListBase,
+  Route,
+  TabActions,
+  TabNavigationState,
+  useLinkBuilder,
+  useTheme,
 } from '@react-navigation/native';
+import * as React from 'react';
+import { Platform, StyleSheet, Text } from 'react-native';
+import { BottomNavigation, DarkTheme, DefaultTheme } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type {
   MaterialBottomTabDescriptorMap,
@@ -28,14 +29,16 @@ type Scene = { route: { key: string } };
 
 // Optionally require vector-icons referenced from react-native-paper:
 // https://github.com/callstack/react-native-paper/blob/4b26429c49053eaa4c3e0fae208639e01093fa87/src/components/MaterialCommunityIcon.tsx#L14
-let MaterialCommunityIcons: React.ComponentType<React.ComponentProps<
-  typeof import('react-native-vector-icons/MaterialCommunityIcons').default
->>;
+let MaterialCommunityIcons: React.ComponentType<
+  React.ComponentProps<
+    typeof import('react-native-vector-icons/MaterialCommunityIcons').default
+  >
+>;
 
 try {
   // Optionally require vector-icons
-  MaterialCommunityIcons = require('react-native-vector-icons/MaterialCommunityIcons')
-    .default;
+  MaterialCommunityIcons =
+    require('react-native-vector-icons/MaterialCommunityIcons').default;
 } catch (e) {
   let isErrorLogged = false;
 
@@ -44,7 +47,8 @@ try {
     name,
     color,
     size,
-    selectionColor: _,
+    selectionColor: _0,
+    onLayout: _1,
     ...rest
   }) => {
     if (!isErrorLogged) {
@@ -78,6 +82,7 @@ function MaterialBottomTabViewInner({
   descriptors,
   ...rest
 }: Props) {
+  const insets = useSafeAreaInsets();
   const { dark, colors } = useTheme();
   const buildLink = useLinkBuilder();
 
@@ -185,15 +190,16 @@ function MaterialBottomTabViewInner({
           preventDefault();
         }
       }}
+      safeAreaInsets={insets}
     />
   );
 }
 
 export default function MaterialBottomTabView(props: Props) {
   return (
-    <NavigationHelpersContext.Provider value={props.navigation}>
+    <SafeAreaProviderCompat>
       <MaterialBottomTabViewInner {...props} />
-    </NavigationHelpersContext.Provider>
+    </SafeAreaProviderCompat>
   );
 }
 

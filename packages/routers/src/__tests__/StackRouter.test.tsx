@@ -1,8 +1,8 @@
 import {
   CommonActions,
-  StackRouter,
-  StackActions,
   RouterConfigOptions,
+  StackActions,
+  StackRouter,
 } from '..';
 
 jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));
@@ -1161,31 +1161,6 @@ it("doesn't push nonexistent screen", () => {
       options
     )
   ).toBe(null);
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 1,
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          { key: 'baz', name: 'baz' },
-          { key: 'bar', name: 'bar' },
-        ],
-      },
-      {
-        type: 'PUSH',
-        payload: {
-          name: 'far',
-          key: 'test',
-          params: { answer: 42 },
-        },
-      },
-      options
-    )
-  ).toBe(null);
 });
 
 it('ensures unique ID for push', () => {
@@ -1280,73 +1255,6 @@ it('ensures unique ID for push', () => {
       { key: 'bar-test', name: 'bar', params: { foo: 'b' } },
     ],
   });
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 2,
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          { key: 'bar-3', name: 'bar' },
-          { key: 'bar-4', name: 'bar', params: { foo: 21 } },
-          { key: 'baz-5', name: 'baz' },
-        ],
-      },
-      {
-        type: 'PUSH',
-        payload: { name: 'bar', key: 'bar-4', params: { bar: 29 } },
-      },
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'stack',
-    key: 'root',
-    index: 2,
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [
-      { key: 'bar-3', name: 'bar' },
-      { key: 'baz-5', name: 'baz' },
-      { key: 'bar-4', name: 'bar', params: { foo: 21, bar: 29 } },
-    ],
-  });
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 2,
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          { key: 'bar-3', name: 'bar' },
-          { key: 'bar-4', name: 'bar' },
-          { key: 'baz-5', name: 'baz' },
-        ],
-      },
-      {
-        type: 'PUSH',
-        payload: { name: 'bar', key: 'bar-6', params: { bar: 29 } },
-      },
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'stack',
-    key: 'root',
-    index: 3,
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [
-      { key: 'bar-3', name: 'bar' },
-      { key: 'bar-4', name: 'bar' },
-      { key: 'baz-5', name: 'baz' },
-      { key: 'bar-6', name: 'bar', params: { bar: 29 } },
-    ],
-  });
 });
 
 it('ensure unique ID is only per route name for push', () => {
@@ -1391,11 +1299,166 @@ it('ensure unique ID is only per route name for push', () => {
   });
 });
 
-it('merges params on navigate to an existing screen', () => {
+it('adds path on navigate if provided', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar', params: { answer: 42 } },
+          { key: 'qux', name: 'qux' },
+        ],
+      },
+
+      CommonActions.navigate({
+        name: 'bar',
+        path: '/foo/bar',
+      }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar', path: '/foo/bar' },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar', params: { answer: 42 }, path: '/foo/bar' },
+        ],
+      },
+      CommonActions.navigate({
+        name: 'bar',
+        params: { fruit: 'orange' },
+        path: '/foo/baz',
+      }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      {
+        key: 'bar',
+        name: 'bar',
+        params: { fruit: 'orange' },
+        path: '/foo/baz',
+      },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 0,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [{ key: 'bar', name: 'bar', params: { answer: 42 } }],
+      },
+      CommonActions.navigate({
+        name: 'baz',
+        path: '/foo/bar',
+      }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'bar', name: 'bar', params: { answer: 42 } },
+      {
+        key: 'baz-test',
+        name: 'baz',
+        path: '/foo/bar',
+      },
+    ],
+  });
+});
+
+it("doesn't remove existing path on navigate if not provided", () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar', path: '/foo/bar' },
+          { key: 'qux', name: 'qux' },
+        ],
+      },
+
+      CommonActions.navigate({
+        name: 'bar',
+        params: { answer: 42 },
+      }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar', params: { answer: 42 }, path: '/foo/bar' },
+    ],
+  });
+});
+
+it("doesn't merge params on navigate to an existing screen", () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {
+      bar: { color: 'test' },
+    },
     routeGetIdList: {},
   };
 
@@ -1424,7 +1487,7 @@ it('merges params on navigate to an existing screen', () => {
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
-      { key: 'bar', name: 'bar', params: { answer: 42 } },
+      { key: 'bar', name: 'bar', params: { color: 'test' } },
     ],
   });
 
@@ -1452,16 +1515,17 @@ it('merges params on navigate to an existing screen', () => {
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
-      { key: 'bar', name: 'bar', params: { answer: 42, fruit: 'orange' } },
+      { key: 'bar', name: 'bar', params: { color: 'test', fruit: 'orange' } },
     ],
   });
 });
 
-it("doesn't merge params on navigate to an existing screen if merge: false", () => {
+it('merges params on navigate to an existing screen if merge: true', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {
+      bar: { color: 'test' },
       baz: { foo: 12 },
     },
     routeGetIdList: {},
@@ -1481,13 +1545,11 @@ it("doesn't merge params on navigate to an existing screen if merge: false", () 
           { key: 'qux', name: 'qux' },
         ],
       },
-      {
-        type: 'NAVIGATE',
-        payload: {
-          name: 'bar',
-          merge: false,
-        },
-      },
+
+      CommonActions.navigate({
+        name: 'bar',
+        merge: true,
+      }),
       options
     )
   ).toEqual({
@@ -1498,7 +1560,7 @@ it("doesn't merge params on navigate to an existing screen if merge: false", () 
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
-      { key: 'bar', name: 'bar' },
+      { key: 'bar', name: 'bar', params: { color: 'test', answer: 42 } },
     ],
   });
 
@@ -1515,14 +1577,11 @@ it("doesn't merge params on navigate to an existing screen if merge: false", () 
           { key: 'bar', name: 'bar', params: { answer: 42 } },
         ],
       },
-      {
-        type: 'NAVIGATE',
-        payload: {
-          name: 'bar',
-          params: { fruit: 'orange' },
-          merge: false,
-        },
-      },
+      CommonActions.navigate({
+        name: 'bar',
+        params: { fruit: 'orange' },
+        merge: true,
+      }),
       options
     )
   ).toEqual({
@@ -1533,7 +1592,11 @@ it("doesn't merge params on navigate to an existing screen if merge: false", () 
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
-      { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
+      {
+        key: 'bar',
+        name: 'bar',
+        params: { color: 'test', fruit: 'orange', answer: 42 },
+      },
     ],
   });
 
@@ -1550,14 +1613,11 @@ it("doesn't merge params on navigate to an existing screen if merge: false", () 
           { key: 'bar', name: 'bar', params: { answer: 42 } },
         ],
       },
-      {
-        type: 'NAVIGATE',
-        payload: {
-          name: 'baz',
-          params: { color: 'black' },
-          merge: false,
-        },
-      },
+      CommonActions.navigate({
+        name: 'baz',
+        params: { color: 'black' },
+        merge: true,
+      }),
       options
     )
   ).toEqual({
@@ -1566,6 +1626,12 @@ it("doesn't merge params on navigate to an existing screen if merge: false", () 
     key: 'root',
     index: 0,
     routeNames: ['baz', 'bar', 'qux'],
-    routes: [{ key: 'baz', name: 'baz', params: { foo: 12, color: 'black' } }],
+    routes: [
+      {
+        key: 'baz',
+        name: 'baz',
+        params: { foo: 12, test: 99, color: 'black' },
+      },
+    ],
   });
 });

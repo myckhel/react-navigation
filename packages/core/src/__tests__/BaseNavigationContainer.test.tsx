@@ -1,18 +1,20 @@
-import * as React from 'react';
-import { act, render } from '@testing-library/react-native';
 import {
   DefaultRouterOptions,
   NavigationState,
+  ParamListBase,
   Router,
   StackRouter,
   TabRouter,
 } from '@react-navigation/routers';
+import { act, render } from '@testing-library/react-native';
+import * as React from 'react';
+
 import BaseNavigationContainer from '../BaseNavigationContainer';
+import createNavigationContainerRef from '../createNavigationContainerRef';
 import NavigationStateContext from '../NavigationStateContext';
-import MockRouter, { MockActions } from './__fixtures__/MockRouter';
-import useNavigationBuilder from '../useNavigationBuilder';
 import Screen from '../Screen';
-import type { NavigationContainerRef } from '../types';
+import useNavigationBuilder from '../useNavigationBuilder';
+import MockRouter, { MockActions } from './__fixtures__/MockRouter';
 
 it('throws when getState is accessed without a container', () => {
   expect.assertions(1);
@@ -128,7 +130,7 @@ it('handle dispatching with ref', () => {
     );
   };
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const onStateChange = jest.fn();
 
@@ -141,10 +143,10 @@ it('handle dispatching with ref', () => {
         state: {
           index: 0,
           key: '4',
-          routeNames: ['qux', 'lex'],
+          routeNames: ['qux2', 'lex2'],
           routes: [
-            { key: 'qux', name: 'qux' },
-            { key: 'lex', name: 'lex' },
+            { key: 'qux2', name: 'qux2' },
+            { key: 'lex2', name: 'lex2' },
           ],
         },
       },
@@ -163,8 +165,8 @@ it('handle dispatching with ref', () => {
         <Screen name="foo2">
           {() => (
             <ChildNavigator>
-              <Screen name="qux">{() => null}</Screen>
-              <Screen name="lex">{() => null}</Screen>
+              <Screen name="qux1">{() => null}</Screen>
+              <Screen name="lex1">{() => null}</Screen>
             </ChildNavigator>
           )}
         </Screen>
@@ -172,8 +174,8 @@ it('handle dispatching with ref', () => {
         <Screen name="baz">
           {() => (
             <ChildNavigator>
-              <Screen name="qux">{() => null}</Screen>
-              <Screen name="lex">{() => null}</Screen>
+              <Screen name="qux2">{() => null}</Screen>
+              <Screen name="lex2">{() => null}</Screen>
             </ChildNavigator>
           )}
         </Screen>
@@ -203,10 +205,10 @@ it('handle dispatching with ref', () => {
           type: 'test',
           index: 0,
           key: '1',
-          routeNames: ['qux', 'lex'],
+          routeNames: ['qux2', 'lex2'],
           routes: [
-            { key: 'lex', name: 'lex' },
-            { key: 'qux', name: 'qux' },
+            { key: 'lex2', name: 'lex2' },
+            { key: 'qux2', name: 'qux2' },
           ],
         },
       },
@@ -226,7 +228,7 @@ it('handle resetting state with ref', () => {
     );
   };
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const onStateChange = jest.fn();
 
@@ -237,8 +239,8 @@ it('handle resetting state with ref', () => {
         <Screen name="foo2">
           {() => (
             <TestNavigator>
-              <Screen name="qux">{() => null}</Screen>
-              <Screen name="lex">{() => null}</Screen>
+              <Screen name="qux1">{() => null}</Screen>
+              <Screen name="lex1">{() => null}</Screen>
             </TestNavigator>
           )}
         </Screen>
@@ -246,8 +248,8 @@ it('handle resetting state with ref', () => {
         <Screen name="baz">
           {() => (
             <TestNavigator>
-              <Screen name="qux">{() => null}</Screen>
-              <Screen name="lex">{() => null}</Screen>
+              <Screen name="qux2">{() => null}</Screen>
+              <Screen name="lex2">{() => null}</Screen>
             </TestNavigator>
           )}
         </Screen>
@@ -266,10 +268,10 @@ it('handle resetting state with ref', () => {
         state: {
           index: 0,
           key: '4',
-          routeNames: ['qux', 'lex'],
+          routeNames: ['qux2', 'lex2'],
           routes: [
-            { key: 'qux', name: 'qux' },
-            { key: 'lex', name: 'lex' },
+            { key: 'qux2', name: 'qux2' },
+            { key: 'lex2', name: 'lex2' },
           ],
         },
       },
@@ -293,10 +295,10 @@ it('handle resetting state with ref', () => {
         state: {
           index: 0,
           key: '6',
-          routeNames: ['qux', 'lex'],
+          routeNames: ['qux2', 'lex2'],
           routes: [
-            { key: 'qux', name: 'qux' },
-            { key: 'lex', name: 'lex' },
+            { key: 'qux2', name: 'qux2' },
+            { key: 'lex2', name: 'lex2' },
           ],
           stale: false,
           type: 'test',
@@ -316,7 +318,7 @@ it('handles getRootState', () => {
     return descriptors[state.routes[state.index].key].render();
   };
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
     <BaseNavigationContainer ref={ref}>
@@ -378,7 +380,7 @@ it('emits state events when the state changes', () => {
     );
   };
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
     <BaseNavigationContainer ref={ref}>
@@ -448,7 +450,7 @@ it('emits state events when new navigator mounts', () => {
     );
   };
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const NestedNavigator = () => {
     const [isRendered, setIsRendered] = React.useState(false);
@@ -537,7 +539,7 @@ it('emits option events when options change with tab router', () => {
     );
   };
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
     <BaseNavigationContainer ref={ref}>
@@ -611,7 +613,7 @@ it('emits option events when options change with stack router', () => {
     );
   };
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
     <BaseNavigationContainer ref={ref}>
@@ -677,23 +679,27 @@ it('emits option events when options change with stack router', () => {
 it('throws if there is no navigator rendered', () => {
   expect.assertions(1);
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = <BaseNavigationContainer ref={ref} children={null} />;
 
   render(element);
 
-  act(() => {
-    expect(() => ref.current?.dispatch({ type: 'WHATEVER' })).toThrow(
-      "The 'navigation' object hasn't been initialized yet."
-    );
-  });
+  const spy = jest.spyOn(console, 'error').mockImplementation();
+
+  ref.current?.dispatch({ type: 'WHATEVER' });
+
+  expect(spy.mock.calls[0][0]).toMatch(
+    "The 'navigation' object hasn't been initialized yet."
+  );
+
+  spy.mockRestore();
 });
 
 it("throws if the ref hasn't finished initializing", () => {
   expect.assertions(1);
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
@@ -703,9 +709,15 @@ it("throws if the ref hasn't finished initializing", () => {
 
   const TestScreen = () => {
     React.useEffect(() => {
-      expect(() => ref.current?.dispatch({ type: 'WHATEVER' })).toThrow(
+      const spy = jest.spyOn(console, 'error').mockImplementation();
+
+      ref.current?.dispatch({ type: 'WHATEVER' });
+
+      expect(spy.mock.calls[0][0]).toMatch(
         "The 'navigation' object hasn't been initialized yet."
       );
+
+      spy.mockRestore();
     }, []);
 
     return null;
@@ -723,7 +735,7 @@ it("throws if the ref hasn't finished initializing", () => {
 });
 
 it('invokes the unhandled action listener with the unhandled action', () => {
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
   const fn = jest.fn();
 
   const TestNavigator = (props: any) => {
@@ -769,7 +781,7 @@ it('works with state change events in independent nested container', () => {
     );
   };
 
-  const ref = React.createRef<NavigationContainerRef>();
+  const ref = createNavigationContainerRef<ParamListBase>();
 
   const onStateChange = jest.fn();
 
@@ -820,4 +832,86 @@ it('works with state change events in independent nested container', () => {
     stale: false,
     type: 'test',
   });
+});
+
+it('warns for duplicate route names nested inside each other', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return (
+      <React.Fragment>
+        {descriptors[state.routes[state.index].key].render()}
+      </React.Fragment>
+    );
+  };
+
+  const TestScreen = () => <></>;
+
+  const spy = jest.spyOn(console, 'warn').mockImplementation();
+
+  render(
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="foo">
+          {() => (
+            <TestNavigator>
+              <Screen name="foo" component={TestScreen} />
+              <Screen name="baz" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="bar" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(spy.mock.calls[0][0]).toMatch(
+    'Found screens with the same name nested inside one another.'
+  );
+
+  render(
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="qux">
+          {() => (
+            <TestNavigator>
+              <Screen name="foo">
+                {() => (
+                  <TestNavigator>
+                    <Screen name="foo" component={TestScreen} />
+                    <Screen name="baz" component={TestScreen} />
+                  </TestNavigator>
+                )}
+              </Screen>
+              <Screen name="bar" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(spy.mock.calls[1][0]).toMatch(
+    'Found screens with the same name nested inside one another.'
+  );
+
+  render(
+    <BaseNavigationContainer>
+      <TestNavigator initialRouteName="bar">
+        <Screen name="foo" component={TestScreen} />
+        <Screen name="bar">
+          {() => (
+            <TestNavigator>
+              <Screen name="foo" component={TestScreen} />
+              <Screen name="baz" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(spy).toHaveBeenCalledTimes(2);
+
+  spy.mockRestore();
 });

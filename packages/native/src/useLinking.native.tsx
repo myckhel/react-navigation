@@ -1,10 +1,12 @@
-import * as React from 'react';
-import { Linking, Platform } from 'react-native';
 import {
   getActionFromState as getActionFromStateDefault,
   getStateFromPath as getStateFromPathDefault,
   NavigationContainerRef,
+  ParamListBase,
 } from '@react-navigation/core';
+import * as React from 'react';
+import { Linking, Platform } from 'react-native';
+
 import extractPathFromURL from './extractPathFromURL';
 import type { LinkingOptions } from './types';
 
@@ -13,7 +15,7 @@ type ResultState = ReturnType<typeof getStateFromPathDefault>;
 let isUsingLinking = false;
 
 export default function useLinking(
-  ref: React.RefObject<NavigationContainerRef>,
+  ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
   {
     enabled = true,
     prefixes,
@@ -45,7 +47,7 @@ export default function useLinking(
     },
     getStateFromPath = getStateFromPathDefault,
     getActionFromState = getActionFromStateDefault,
-  }: LinkingOptions
+  }: LinkingOptions<ParamListBase>
 ) {
   React.useEffect(() => {
     if (enabled !== false && isUsingLinking) {

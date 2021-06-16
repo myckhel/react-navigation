@@ -3,44 +3,203 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [5.15.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.15.1...@react-navigation/core@5.15.2) (2021-02-21)
-
-**Note:** Version bump only for package @react-navigation/core
-
-
-
-
-
-## [5.15.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.15.0...@react-navigation/core@5.15.1) (2021-01-21)
-
-**Note:** Version bump only for package @react-navigation/core
-
-
-
-
-
-# [5.15.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.14.4...@react-navigation/core@5.15.0) (2021-01-14)
-
-
-### Bug Fixes
-
-* print an error when passing a second argument to useFocusEffect ([2317633](https://github.com/react-navigation/react-navigation/commit/23176336528f98924d19f321d41cb70f13300edd))
+# [6.0.0-next.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.13...@react-navigation/core@6.0.0-next.14) (2021-06-10)
 
 
 ### Features
 
-* add a way to specify an unique ID for screens ([b19f76b](https://github.com/react-navigation/react-navigation/commit/b19f76bfffe623759e67d925bfd067c753a453bf))
+* show stack trace in the flipper plugin ([97772af](https://github.com/react-navigation/react-navigation/commit/97772affa3c8f26489f0bdbfb6872ef4377b8ed1))
 
 
 
 
 
-## [5.14.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.14.3...@react-navigation/core@5.14.4) (2020-11-20)
+# [6.0.0-next.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.12...@react-navigation/core@6.0.0-next.13) (2021-05-29)
 
 
 ### Bug Fixes
 
-* fix incorrect state change events in independent nested container ([95b2599](https://github.com/react-navigation/react-navigation/commit/95b2599877f5ceedf753e399e0586bb4af54cb87)), closes [#9080](https://github.com/react-navigation/react-navigation/issues/9080)
+* validate property names in linking config ([324ea71](https://github.com/react-navigation/react-navigation/commit/324ea7181db6b743f512854be267cc9d65975b6f))
+
+
+
+
+
+# [6.0.0-next.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.11...@react-navigation/core@6.0.0-next.12) (2021-05-29)
+
+
+### Bug Fixes
+
+* try to fix [#9631](https://github.com/react-navigation/react-navigation/issues/9631) ([b4d7b0e](https://github.com/react-navigation/react-navigation/commit/b4d7b0ee86c09419a18357867a0a25bb90d960c0))
+
+
+
+
+
+# [6.0.0-next.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.10...@react-navigation/core@6.0.0-next.11) (2021-05-27)
+
+**Note:** Version bump only for package @react-navigation/core
+
+
+
+
+
+# [6.0.0-next.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.9...@react-navigation/core@6.0.0-next.10) (2021-05-26)
+
+
+### Features
+
+* add screenListeners prop on navigators similar to screenOptions ([cde44a5](https://github.com/react-navigation/react-navigation/commit/cde44a5785444a121aa08f94af9f8fe4fc89910a))
+* expose container ref in useNavigation ([1d40279](https://github.com/react-navigation/react-navigation/commit/1d40279db18ab2aed12517ed3ca6af6d509477d2))
+
+
+
+
+
+# [6.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.8...@react-navigation/core@6.0.0-next.9) (2021-05-23)
+
+**Note:** Version bump only for package @react-navigation/core
+
+
+
+
+
+# [6.0.0-next.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.7...@react-navigation/core@6.0.0-next.8) (2021-05-16)
+
+
+### Bug Fixes
+
+* fix type error when passing unannotated navigation ref ([dc4ffc0](https://github.com/react-navigation/react-navigation/commit/dc4ffc0171b4535fe1b6e839b9d54350121bcf55))
+
+
+
+
+
+# [6.0.0-next.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.6...@react-navigation/core@6.0.0-next.7) (2021-05-10)
+
+
+### Features
+
+* return a NavigationContent component from useNavigationBuilder ([1179d56](https://github.com/react-navigation/react-navigation/commit/1179d56c5008270753feef41acdc1dbd2191efcf))
+
+
+
+
+
+# [6.0.0-next.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.5...@react-navigation/core@6.0.0-next.6) (2021-05-09)
+
+
+### Bug Fixes
+
+* fix type annotations for useNavigation (again) ([929c3e3](https://github.com/react-navigation/react-navigation/commit/929c3e3a3b3eb32d197ef1f887dc4cbdce48eaff))
+
+
+
+
+
+# [6.0.0-next.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.4...@react-navigation/core@6.0.0-next.5) (2021-05-09)
+
+
+### Bug Fixes
+
+* fix type annotations for useNavigation ([7da45e1](https://github.com/react-navigation/react-navigation/commit/7da45e1e8951ff46e09db4ebc2c88085c67ab8e9))
+
+
+
+
+
+# [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.3...@react-navigation/core@6.0.0-next.4) (2021-05-09)
+
+
+### Features
+
+* add a new component to group multiple screens with common options ([1a6aebe](https://github.com/react-navigation/react-navigation/commit/1a6aebefcb77ea708687475c55742407d69808ce))
+* add ability to specify root param list ([b28bfdd](https://github.com/react-navigation/react-navigation/commit/b28bfddc17cbf3996fac04a34b2a7085ecf88be5))
+
+
+
+
+
+# [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.2...@react-navigation/core@6.0.0-next.3) (2021-05-01)
+
+
+### Features
+
+* add a CompositeScreenProps type ([def7c03](https://github.com/react-navigation/react-navigation/commit/def7c03d7d7b42cf322f4e277f8f76858717654e))
+* add helper and hook for container ref ([0ecd112](https://github.com/react-navigation/react-navigation/commit/0ecd112ec9786a26261ada3d33ef44dc1ec84da0))
+
+
+
+
+
+# [6.0.0-next.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0-next.1...@react-navigation/core@6.0.0-next.2) (2021-04-08)
+
+
+### Bug Fixes
+
+* properly resolve initialRouteNames ([c38906a](https://github.com/react-navigation/react-navigation/commit/c38906a7a09b997f37ce56734ea823c75ea744db))
+
+
+### Features
+
+* improve useNavigationState typing ([#9464](https://github.com/react-navigation/react-navigation/issues/9464)) ([84020a0](https://github.com/react-navigation/react-navigation/commit/84020a0b27ebae50d3037438a51d95eb31b02424))
+
+
+
+
+
+# [6.0.0-next.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@6.0.0...@react-navigation/core@6.0.0-next.1) (2021-03-10)
+
+**Note:** Version bump only for package @react-navigation/core
+
+
+
+
+
+# [6.0.0-next.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@5.14.3...@react-navigation/core@6.0.0-next.0) (2021-03-09)
+
+
+### Bug Fixes
+
+* add missing helper types in descriptors ([21a1154](https://github.com/react-navigation/react-navigation/commit/21a11543bf41c4559c2570d5accc0bbb3b67eb8d))
+* check duplicate names only for immediate nested screens ([36a9b4f](https://github.com/react-navigation/react-navigation/commit/36a9b4f866c49d6f7350405c54b86bd77e374eb5))
+* don't merge params on navigation ([366d018](https://github.com/react-navigation/react-navigation/commit/366d0181dc02597b8d11e343f37fc77bee164c70))
+* drop dangerously prefix from getState and getParent ([227f133](https://github.com/react-navigation/react-navigation/commit/227f133536af85dc5ff85eeb269b76ed80cd3f05))
+* drop support for legacy linking config ([0e13e8d](https://github.com/react-navigation/react-navigation/commit/0e13e8d23cc2ea74f3b0fce9334ee5c8be2484f4))
+* fix default screen options not being respected ([03ba1f2](https://github.com/react-navigation/react-navigation/commit/03ba1f2930cb731266e6bc3044c67fb267837ed1))
+* fix incorrect state change events in independent nested container ([b82a912](https://github.com/react-navigation/react-navigation/commit/b82a9126bb91a84e21473723ce40da0cce732a39)), closes [#9080](https://github.com/react-navigation/react-navigation/issues/9080)
+* print an error when passing a second argument to useFocusEffect ([c361795](https://github.com/react-navigation/react-navigation/commit/c361795d97eb20150913ddc3fbf139e095d25830))
+* remove the state property from route prop ([ebab518](https://github.com/react-navigation/react-navigation/commit/ebab5183522f5ae03f50f88289c0e7acc208dc02))
+* show redbox instead of crash if navigation isn't initialized ([13d8553](https://github.com/react-navigation/react-navigation/commit/13d85530ae684eb956d3c4df25919572caf0ec1a))
+
+
+### Features
+
+* add a way to specify an unique ID for screens ([15b8bb3](https://github.com/react-navigation/react-navigation/commit/15b8bb34584db3cb166f6aafd45f0b95f14fde62))
+* add an option to specify default options for the navigator ([c85f2ff](https://github.com/react-navigation/react-navigation/commit/c85f2ff47a2b3d403a3cbe993b46d04914358ba5))
+* allow returning null or undefined to skip actions with dispatch ([d6466b7](https://github.com/react-navigation/react-navigation/commit/d6466b7a4b5d3087981dbd50a5f5f56a6092edb3))
+* associate path with the route it opens when deep linking ([#9384](https://github.com/react-navigation/react-navigation/issues/9384)) ([86e64fd](https://github.com/react-navigation/react-navigation/commit/86e64fdcd81a57cf3f3bdab4c9035b52984e7009)), closes [#9102](https://github.com/react-navigation/react-navigation/issues/9102)
+* warn on duplicate screen names across navigators ([02a031e](https://github.com/react-navigation/react-navigation/commit/02a031e46eac432fc3e26c5de30c7bdf0a81ce49))
+
+
+### BREAKING CHANGES
+
+* This commit drops support for legacy linking config which allowed screens to be specified without the screens property in the config.
+* Previous versions of React Navigation merged params on navigation which caused confusion. This commit changes params not to be merged.
+
+The old behaviour can still be achieved by passing `merge: true` explicitly:
+
+```js
+CommonActions.navigate({
+  name: 'bar',
+  params: { fruit: 'orange' },
+  merge: true,
+})
+```
+`initialParams` specified for the screen are always merged.
+* any code which relies on `route.state` will break.
+
+Previous versions printed a warning on accessing `route.state`. This commit removes the property entirely. Accessing this property isn't safe since child navigator state isn't gurranteed to be in sync with parent navigator state and cause subtle bugs in apps.
 
 
 

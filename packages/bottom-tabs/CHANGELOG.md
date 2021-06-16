@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [5.11.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.7...@react-navigation/bottom-tabs@5.11.8) (2021-02-21)
+# [6.0.0-next.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.18...@react-navigation/bottom-tabs@6.0.0-next.19) (2021-06-10)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -11,29 +11,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.11.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.6...@react-navigation/bottom-tabs@5.11.7) (2021-01-25)
-
-
-### Bug Fixes
-
-* fix drawer screen content not being interactable on Android ([87b5147](https://github.com/react-navigation/react-navigation/commit/87b51476d0bce8f2dae793416c2976da30a1a5f7))
-
-
-
-
-
-## [5.11.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.5...@react-navigation/bottom-tabs@5.11.6) (2021-01-22)
-
-
-### Bug Fixes
-
-* fix pointerEvents in ResourceSavingScene ([60fe0db](https://github.com/react-navigation/react-navigation/commit/60fe0dbb0ae443fdb21016d368c919b933cb64e7)), closes [#9241](https://github.com/react-navigation/react-navigation/issues/9241) [#9242](https://github.com/react-navigation/react-navigation/issues/9242)
-
-
-
-
-
-## [5.11.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.4...@react-navigation/bottom-tabs@5.11.5) (2021-01-22)
+# [6.0.0-next.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.17...@react-navigation/bottom-tabs@6.0.0-next.18) (2021-06-01)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
 
@@ -41,31 +19,216 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.11.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.3...@react-navigation/bottom-tabs@5.11.4) (2021-01-21)
-
-
-### Bug Fixes
-
-* fix drawer and bottom tabs not being visible on web. closes [#9225](https://github.com/react-navigation/react-navigation/issues/9225) ([d88cbcb](https://github.com/react-navigation/react-navigation/commit/d88cbcb52d46de26edaa9ce6bfb06badb1b1de64))
-
-
-
-
-
-## [5.11.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.2...@react-navigation/bottom-tabs@5.11.3) (2021-01-14)
-
-
-### Bug Fixes
-
-* enable detachInactiveScreens by default on web for better a11y ([dd87fa4](https://github.com/react-navigation/react-navigation/commit/dd87fa49a43ad8db105a62418243339e4150fadf))
-
-
-
-
-
-## [5.11.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.1...@react-navigation/bottom-tabs@5.11.2) (2020-11-20)
+# [6.0.0-next.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.16...@react-navigation/bottom-tabs@6.0.0-next.17) (2021-05-29)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.15...@react-navigation/bottom-tabs@6.0.0-next.16) (2021-05-29)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.14...@react-navigation/bottom-tabs@6.0.0-next.15) (2021-05-27)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.13...@react-navigation/bottom-tabs@6.0.0-next.14) (2021-05-26)
+
+
+### Features
+
+* add screenListeners prop on navigators similar to screenOptions ([cde44a5](https://github.com/react-navigation/react-navigation/commit/cde44a5785444a121aa08f94af9f8fe4fc89910a))
+
+
+
+
+
+# [6.0.0-next.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.12...@react-navigation/bottom-tabs@6.0.0-next.13) (2021-05-25)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.11...@react-navigation/bottom-tabs@6.0.0-next.12) (2021-05-23)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.10...@react-navigation/bottom-tabs@6.0.0-next.11) (2021-05-16)
+
+
+### Bug Fixes
+
+* fix tab bar height including extra bottom inset ([7c722d2](https://github.com/react-navigation/react-navigation/commit/7c722d2028e914e8f143b9385ebf5e1c00131a01))
+
+
+### Features
+
+* add a tabBarBackground option to bottom tabs ([2f282f1](https://github.com/react-navigation/react-navigation/commit/2f282f107053a65b69f80edb5d9c858cfa569aa2))
+
+
+
+
+
+# [6.0.0-next.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.9...@react-navigation/bottom-tabs@6.0.0-next.10) (2021-05-10)
+
+
+### Bug Fixes
+
+* add a deprecation warning for mode prop in stack ([a6e4981](https://github.com/react-navigation/react-navigation/commit/a6e498170f59648190fa5513e273ca523e56c5d5))
+
+
+### Features
+
+* return a NavigationContent component from useNavigationBuilder ([1179d56](https://github.com/react-navigation/react-navigation/commit/1179d56c5008270753feef41acdc1dbd2191efcf))
+
+
+
+
+
+# [6.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.8...@react-navigation/bottom-tabs@6.0.0-next.9) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.7...@react-navigation/bottom-tabs@6.0.0-next.8) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.6...@react-navigation/bottom-tabs@6.0.0-next.7) (2021-05-09)
+
+
+### Bug Fixes
+
+* enable screens only on supported platforms ([#9494](https://github.com/react-navigation/react-navigation/issues/9494)) ([8da4c58](https://github.com/react-navigation/react-navigation/commit/8da4c58065607d44e9dc1ad8943e09537598dcd7))
+* make sure disabling react-native-screens works ([a369ba3](https://github.com/react-navigation/react-navigation/commit/a369ba36451ddc2bb5b247e61b725bce1e3fb5e5))
+
+
+
+
+
+# [6.0.0-next.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.5...@react-navigation/bottom-tabs@6.0.0-next.6) (2021-05-01)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.4...@react-navigation/bottom-tabs@6.0.0-next.5) (2021-04-16)
+
+
+### Bug Fixes
+
+* update tab bar height correctly. fixes [#9296](https://github.com/react-navigation/react-navigation/issues/9296) ([338ed6f](https://github.com/react-navigation/react-navigation/commit/338ed6ff07bd2d6efa1abdb369612ea72f540502))
+
+
+
+
+
+# [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.3...@react-navigation/bottom-tabs@6.0.0-next.4) (2021-04-08)
+
+
+### Bug Fixes
+
+* remove calls to removed Keyboard.removeListener in useIsKeyboardShown ([#9457](https://github.com/react-navigation/react-navigation/issues/9457)) ([d87857e](https://github.com/react-navigation/react-navigation/commit/d87857e5d93c19ebee2fd84eb4910e36001ec2a3))
+
+
+
+
+
+# [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.2...@react-navigation/bottom-tabs@6.0.0-next.3) (2021-03-22)
+
+
+### Bug Fixes
+
+* use tab role on Android for accessibility ([de805a3](https://github.com/react-navigation/react-navigation/commit/de805a3ebf35db81cb7b7bcbf5cfd4a03e69c567))
+
+
+### Features
+
+* add a Background component ([cbaabc1](https://github.com/react-navigation/react-navigation/commit/cbaabc1288e780698e499a00b9ca06ab9746a0da))
+
+
+
+
+
+# [6.0.0-next.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0-next.1...@react-navigation/bottom-tabs@6.0.0-next.2) (2021-03-12)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+
+
+
+
+# [6.0.0-next.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@6.0.0...@react-navigation/bottom-tabs@6.0.0-next.1) (2021-03-10)
+
+
+### Bug Fixes
+
+* fix peer dep versions ([72f90b5](https://github.com/react-navigation/react-navigation/commit/72f90b50d27eda1315bb750beca8a36f26dafe17))
+
+
+
+
+
+# [6.0.0-next.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@5.11.1...@react-navigation/bottom-tabs@6.0.0-next.0) (2021-03-09)
+
+
+### Bug Fixes
+
+* add missing helper types in descriptors ([21a1154](https://github.com/react-navigation/react-navigation/commit/21a11543bf41c4559c2570d5accc0bbb3b67eb8d))
+* drop usage of Dimensions in favor of metrics from safe-area-context ([12b893d](https://github.com/react-navigation/react-navigation/commit/12b893d7ca8cdb726b973972797658ac9c7d17d7))
+* enable detachInactiveScreens by default on web for better a11y ([4954d6a](https://github.com/react-navigation/react-navigation/commit/4954d6aae3cdbb5855d44ff17d80d16b81fb224e))
+* fix drawer and bottom tabs not being visible on web. closes [#9225](https://github.com/react-navigation/react-navigation/issues/9225) ([b735de1](https://github.com/react-navigation/react-navigation/commit/b735de153ca650240625dba6d8b5c8d16b913bac))
+* fix drawer screen content not being interactable on Android ([865d8b3](https://github.com/react-navigation/react-navigation/commit/865d8b3e51e117a01243966c160b7cd147d236ac))
+* fix initial metrics on server ([69d333f](https://github.com/react-navigation/react-navigation/commit/69d333f6c23e0c37eaf4d3f8b413e8f96d6827f8))
+* fix pointerEvents in ResourceSavingScene ([af53dd6](https://github.com/react-navigation/react-navigation/commit/af53dd6548630124f831446e0eee468da5d9bf5e)), closes [#9241](https://github.com/react-navigation/react-navigation/issues/9241) [#9242](https://github.com/react-navigation/react-navigation/issues/9242)
+* show a missing icon symbol instead of empty area in bottom tab bar ([2bc4882](https://github.com/react-navigation/react-navigation/commit/2bc4882692be9f02d781639892e1f98b891811c4))
+
+
+### Code Refactoring
+
+* don't use deprecated APIs from react-native-safe-area-context ([ddf27bf](https://github.com/react-navigation/react-navigation/commit/ddf27bf41a2efc5d1573aad0f8fe6c27a98c32b3))
+* drop support for tabBarVisible option ([a97a43a](https://github.com/react-navigation/react-navigation/commit/a97a43aa1d2a615074ade93f1addebcee1dbfb65))
+* move `tabBarOptions` to `options` for bottom tabs ([f7ff1ad](https://github.com/react-navigation/react-navigation/commit/f7ff1adee7654b2d624dee4ae8844be217f23026))
+
+
+### Features
+
+* initial implementation of @react-navigation/elements ([07ba7a9](https://github.com/react-navigation/react-navigation/commit/07ba7a96870efdb8acf99eb82ba0b1d3eac90bab))
+* move lazy to options for bottom-tabs and drawer ([068a9a4](https://github.com/react-navigation/react-navigation/commit/068a9a456c31a08104097f2a8434c66c30a5be99))
+
+
+### BREAKING CHANGES
+
+* The lazy prop now can be configured per screen instead of for the whole navigator. To keep previous behavior, you can specify it in screenOptions
+* This commit moves options from `tabBarOptions` to regular `options` in order to reduce confusion between the two, as well as to make it more flexible to configure the tab bar based on a per screen basis.
+* We now require newer versions of safe area context library.
+* We need to add support for specifying style for tab bar in options to support the use cases which need this.
 
 
 

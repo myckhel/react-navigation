@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [5.14.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.14.2...@react-navigation/stack@5.14.3) (2021-02-21)
+# [6.0.0-next.26](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.25...@react-navigation/stack@6.0.0-next.26) (2021-06-10)
 
 **Note:** Version bump only for package @react-navigation/stack
 
@@ -11,18 +11,29 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [5.14.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.14.1...@react-navigation/stack@5.14.2) (2021-01-25)
+# [6.0.0-next.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.24...@react-navigation/stack@6.0.0-next.25) (2021-06-01)
 
 
 ### Bug Fixes
 
-* fix transparent modal on web ([38d6808](https://github.com/react-navigation/react-navigation/commit/38d680833e31e62736da19f79328aec553ced814))
+* tweak android q animation ([7d74bd7](https://github.com/react-navigation/react-navigation/commit/7d74bd73a7333f0b1373a05c9f06e981556feed2))
 
 
 
 
 
-## [5.14.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.14.0...@react-navigation/stack@5.14.1) (2021-01-22)
+# [6.0.0-next.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.23...@react-navigation/stack@6.0.0-next.24) (2021-05-29)
+
+
+### Bug Fixes
+
+* remove card shadow from default animation ([70f4fe2](https://github.com/react-navigation/react-navigation/commit/70f4fe2ffaa219a2a72e0ae25b7d5d007948c2a4)), closes [#9569](https://github.com/react-navigation/react-navigation/issues/9569)
+
+
+
+
+
+# [6.0.0-next.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.22...@react-navigation/stack@6.0.0-next.23) (2021-05-29)
 
 **Note:** Version bump only for package @react-navigation/stack
 
@@ -30,47 +41,310 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [5.14.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.13.0...@react-navigation/stack@5.14.0) (2021-01-21)
+# [6.0.0-next.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.21...@react-navigation/stack@6.0.0-next.22) (2021-05-27)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.20...@react-navigation/stack@6.0.0-next.21) (2021-05-26)
 
 
 ### Features
 
-* add pressColor and pressOpacity props to drawerItem ([#8834](https://github.com/react-navigation/react-navigation/issues/8834)) ([bae4019](https://github.com/react-navigation/react-navigation/commit/bae4019995062c682f0213c121b7927ab8006c1e))
+* add screenListeners prop on navigators similar to screenOptions ([cde44a5](https://github.com/react-navigation/react-navigation/commit/cde44a5785444a121aa08f94af9f8fe4fc89910a))
 
 
 
 
 
-# [5.13.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.12.8...@react-navigation/stack@5.13.0) (2021-01-14)
+# [6.0.0-next.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.19...@react-navigation/stack@6.0.0-next.20) (2021-05-25)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.18...@react-navigation/stack@6.0.0-next.19) (2021-05-24)
 
 
 ### Bug Fixes
 
-* enable detachInactiveScreens by default on web for better a11y ([dd87fa4](https://github.com/react-navigation/react-navigation/commit/dd87fa49a43ad8db105a62418243339e4150fadf))
+* make transparent modal work with modal presentation ([c90bff0](https://github.com/react-navigation/react-navigation/commit/c90bff08d54d1c7151737a43d4f73abe7d364366))
+
+
+
+
+
+# [6.0.0-next.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.17...@react-navigation/stack@6.0.0-next.18) (2021-05-23)
 
 
 ### Features
 
-* export TransitionPreset for custom TransitionPresets ([#9173](https://github.com/react-navigation/react-navigation/issues/9173)) ([9633c4d](https://github.com/react-navigation/react-navigation/commit/9633c4d35fe2f9cb4f37a7629872e436a4528238))
+* add 'transparentModal' presentation to JS stack ([3d14740](https://github.com/react-navigation/react-navigation/commit/3d147401e8ca98ec2d51d5e11c09cd1271d448d1))
+* enable ipad trackpad two finger back gesture ([4ec6acd](https://github.com/react-navigation/react-navigation/commit/4ec6acdf97ba1b34f25b22af5262798a36b9020a))
 
 
 
 
 
-## [5.12.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.12.7...@react-navigation/stack@5.12.8) (2020-11-21)
+# [6.0.0-next.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.16...@react-navigation/stack@6.0.0-next.17) (2021-05-16)
 
 
 ### Bug Fixes
 
-* force dismiss keyboard if there was no gesture ([3e069b7](https://github.com/react-navigation/react-navigation/commit/3e069b718d60f5381957f2d3838ee04ee9384779)), closes [#9078](https://github.com/react-navigation/react-navigation/issues/9078)
+* don't allow overriding gestureEnabled on first screen ([9f00d60](https://github.com/react-navigation/react-navigation/commit/9f00d60bdb7d6f02996f4fa7dfc09b890ebe22f9))
+* fix broken animation on first screen ([e5238f6](https://github.com/react-navigation/react-navigation/commit/e5238f608472319165e5570f41144be5549e0df1))
 
 
 
 
 
-## [5.12.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.12.6...@react-navigation/stack@5.12.7) (2020-11-20)
+# [6.0.0-next.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.15...@react-navigation/stack@6.0.0-next.16) (2021-05-16)
+
+
+### Bug Fixes
+
+* don't enable animation & gestures for first screen ([6ebe082](https://github.com/react-navigation/react-navigation/commit/6ebe0824df3df4973190428a14286aab0d14d3c1))
+* make stack screens accessible on web without screens ([22b7c3f](https://github.com/react-navigation/react-navigation/commit/22b7c3f6c18a73fc55b0289b91b8d3a96f5be29c))
+* move keyboardHandlingEnabled to screen options ([82900cc](https://github.com/react-navigation/react-navigation/commit/82900cceffa3e338b7b93e831f9ba6cbb3784815))
+
+
+
+
+
+# [6.0.0-next.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.14...@react-navigation/stack@6.0.0-next.15) (2021-05-10)
+
+
+### Bug Fixes
+
+* add a deprecation warning for mode prop in stack ([a6e4981](https://github.com/react-navigation/react-navigation/commit/a6e498170f59648190fa5513e273ca523e56c5d5))
+
+
+### Features
+
+* return a NavigationContent component from useNavigationBuilder ([1179d56](https://github.com/react-navigation/react-navigation/commit/1179d56c5008270753feef41acdc1dbd2191efcf))
+
+
+
+
+
+# [6.0.0-next.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.13...@react-navigation/stack@6.0.0-next.14) (2021-05-09)
+
+
+### Bug Fixes
+
+* fix modal animation not being set properly ([08e74af](https://github.com/react-navigation/react-navigation/commit/08e74af54529582dcbc8d91e77bfed70f006f00d))
+
+
+
+
+
+# [6.0.0-next.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.12...@react-navigation/stack@6.0.0-next.13) (2021-05-09)
 
 **Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.11...@react-navigation/stack@6.0.0-next.12) (2021-05-09)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.10...@react-navigation/stack@6.0.0-next.11) (2021-05-09)
+
+
+### Bug Fixes
+
+* enable screens only on supported platforms ([#9494](https://github.com/react-navigation/react-navigation/issues/9494)) ([8da4c58](https://github.com/react-navigation/react-navigation/commit/8da4c58065607d44e9dc1ad8943e09537598dcd7))
+* make sure disabling react-native-screens works ([a369ba3](https://github.com/react-navigation/react-navigation/commit/a369ba36451ddc2bb5b247e61b725bce1e3fb5e5))
+
+
+### Code Refactoring
+
+* drop mode prop in favor of animationPresentation option ([9ac709e](https://github.com/react-navigation/react-navigation/commit/9ac709ea1e5a63c3a48abfa334ff6a6925095a72))
+
+
+### Features
+
+* automatically set headerMode if it's modal presentation style ([4bb0b43](https://github.com/react-navigation/react-navigation/commit/4bb0b43f1a0f27c96843415de6eaa37edebfb561))
+* support mixing regular and modal presentation in same stack ([60fa3b9](https://github.com/react-navigation/react-navigation/commit/60fa3b9be976a73a5b04b632b4b37672674c956b))
+
+
+### BREAKING CHANGES
+
+* This drops the mode prop on the navigator in favor of a per-screen option animationPresentation
+
+
+
+
+
+# [6.0.0-next.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.9...@react-navigation/stack@6.0.0-next.10) (2021-05-01)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.8...@react-navigation/stack@6.0.0-next.9) (2021-04-08)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.7...@react-navigation/stack@6.0.0-next.8) (2021-03-22)
+
+
+### Features
+
+* add a Background component ([cbaabc1](https://github.com/react-navigation/react-navigation/commit/cbaabc1288e780698e499a00b9ca06ab9746a0da))
+
+
+
+
+
+# [6.0.0-next.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.6...@react-navigation/stack@6.0.0-next.7) (2021-03-22)
+
+
+### Code Refactoring
+
+* make gestureResponseDistance a number ([48851c9](https://github.com/react-navigation/react-navigation/commit/48851c9ebdcf1b835bbcb673adeb88e56b989443))
+
+
+### BREAKING CHANGES
+
+* now we need to pass a number instead of an object
+
+
+
+
+
+# [6.0.0-next.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.5...@react-navigation/stack@6.0.0-next.6) (2021-03-14)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+
+
+
+
+# [6.0.0-next.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.4...@react-navigation/stack@6.0.0-next.5) (2021-03-14)
+
+
+### Bug Fixes
+
+* consider header colors when managing statusbar ([3ad2bcb](https://github.com/react-navigation/react-navigation/commit/3ad2bcbaf85996ce0d5e1e961081978a32448899))
+* consider header colors when managing statusbar ([faee245](https://github.com/react-navigation/react-navigation/commit/faee245d2ec8c59f9e9033d96ae21c5e60d95ba6))
+
+
+### Code Refactoring
+
+* move headerMode to options ([aacc1b5](https://github.com/react-navigation/react-navigation/commit/aacc1b525d86f0e0b1bad8016fd85e82024f16e9))
+
+
+### BREAKING CHANGES
+
+* headerMode is now moved to options instead of props
+
+
+
+
+
+# [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.3...@react-navigation/stack@6.0.0-next.4) (2021-03-12)
+
+
+### Bug Fixes
+
+* add special statusbar handling to modal presentation ([a204edd](https://github.com/react-navigation/react-navigation/commit/a204edd012060f0816eddee7a093183aa379d049))
+
+
+
+
+
+# [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.2...@react-navigation/stack@6.0.0-next.3) (2021-03-12)
+
+
+### Features
+
+* export drawer button ([2c8401d](https://github.com/react-navigation/react-navigation/commit/2c8401d5cb347d37c96e5b30f8ad05c17fd22ea4))
+* return nearest parent header height for useHeaderHeight ([24b3f73](https://github.com/react-navigation/react-navigation/commit/24b3f739da4b8af8dca77d92c72cfdaa762e564a))
+
+
+
+
+
+# [6.0.0-next.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0-next.1...@react-navigation/stack@6.0.0-next.2) (2021-03-11)
+
+
+### Bug Fixes
+
+* respect headerStatusBarHeight option in Stack ([#9405](https://github.com/react-navigation/react-navigation/issues/9405)) ([8a6511c](https://github.com/react-navigation/react-navigation/commit/8a6511c491b2affbe378d720e613a3e3041ca9c2))
+
+
+
+
+
+# [6.0.0-next.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@6.0.0...@react-navigation/stack@6.0.0-next.1) (2021-03-10)
+
+
+### Bug Fixes
+
+* fix peer dep versions ([72f90b5](https://github.com/react-navigation/react-navigation/commit/72f90b50d27eda1315bb750beca8a36f26dafe17))
+* remove use of deprecated currentlyFocusedField ([038eb87](https://github.com/react-navigation/react-navigation/commit/038eb87c42564f9d733e6870826726d3fb0adaee))
+
+
+
+
+
+# [6.0.0-next.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@5.12.6...@react-navigation/stack@6.0.0-next.0) (2021-03-09)
+
+
+### Bug Fixes
+
+* add missing helper types in descriptors ([21a1154](https://github.com/react-navigation/react-navigation/commit/21a11543bf41c4559c2570d5accc0bbb3b67eb8d))
+* drop support for headerMode='none' ([0c55803](https://github.com/react-navigation/react-navigation/commit/0c55803b32c5d20216b91aa7a355b042051ae638))
+* drop usage of Dimensions in favor of metrics from safe-area-context ([12b893d](https://github.com/react-navigation/react-navigation/commit/12b893d7ca8cdb726b973972797658ac9c7d17d7))
+* enable detachInactiveScreens by default on web for better a11y ([4954d6a](https://github.com/react-navigation/react-navigation/commit/4954d6aae3cdbb5855d44ff17d80d16b81fb224e))
+* fix initial metrics on server ([69d333f](https://github.com/react-navigation/react-navigation/commit/69d333f6c23e0c37eaf4d3f8b413e8f96d6827f8))
+* fix transparent modal on web ([c345ef1](https://github.com/react-navigation/react-navigation/commit/c345ef1d0b82e0c0ec1ebd3a3ced4ed5b5e835e4))
+* force dismiss keyboard if there was no gesture ([14ac256](https://github.com/react-navigation/react-navigation/commit/14ac256af363f3bc10ba6cb4ce2d67f347116042)), closes [#9078](https://github.com/react-navigation/react-navigation/issues/9078)
+
+
+### Code Refactoring
+
+* don't use absolute position for header ([79a85a4](https://github.com/react-navigation/react-navigation/commit/79a85a431ce0859ae35a13858b23c3919795e560))
+* don't use deprecated APIs from react-native-safe-area-context ([ddf27bf](https://github.com/react-navigation/react-navigation/commit/ddf27bf41a2efc5d1573aad0f8fe6c27a98c32b3))
+* simplify props for stack and drawer headers ([4cad132](https://github.com/react-navigation/react-navigation/commit/4cad132c2c3daa6370a6916977f1f1db0036d4e4))
+
+
+### Features
+
+* add a slide animation for modals on Android ([6f326cf](https://github.com/react-navigation/react-navigation/commit/6f326cf0c5098a722176aedd2051d29e12c95592))
+* add an option to specify default options for the navigator ([c85f2ff](https://github.com/react-navigation/react-navigation/commit/c85f2ff47a2b3d403a3cbe993b46d04914358ba5))
+* add pressColor and pressOpacity props to drawerItem ([#8834](https://github.com/react-navigation/react-navigation/issues/8834)) ([52dbe4b](https://github.com/react-navigation/react-navigation/commit/52dbe4bd6663430745b07ea379d44d4d4f2944a0))
+* don't hardcode header back test ID ([22a8afa](https://github.com/react-navigation/react-navigation/commit/22a8afac7454cfb776a550abc498ed47c299261d))
+* export TransitionPreset for custom TransitionPresets ([#9173](https://github.com/react-navigation/react-navigation/issues/9173)) ([6c3cccf](https://github.com/react-navigation/react-navigation/commit/6c3cccf87715ccb0a6c4bca6544f29c1b30e9611))
+* initial implementation of @react-navigation/elements ([07ba7a9](https://github.com/react-navigation/react-navigation/commit/07ba7a96870efdb8acf99eb82ba0b1d3eac90bab))
+* use modal presentation style for modals on iOS by default ([8a63f19](https://github.com/react-navigation/react-navigation/commit/8a63f193bf26c35546aa45af01d89b7a7216657d))
+
+
+### BREAKING CHANGES
+
+* We now use flexbox for header elements which could break some existing style code which relied on absolute positioning.
+* Now the back button test ID can be customized using headerBackTestID option
+* We now require newer versions of safe area context library.
+* Previously, the stack header accepted scene and previous scene which contained things such as descriptor, navigation prop, progress etc. The commit simplifies them to pass `route`, `navigation`, `options` and `progress` directly to the header. Similaryly, the `previous` argument now contains `options`, `route` and `progress`.
+* The header can be hidden with `headerShown: false` already. Using both `headerMode='none'` and `headerShown` together causes confusion. So it's time to drop the unnecessary `headerMode` prop.
 
 
 

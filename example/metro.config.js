@@ -67,6 +67,16 @@ module.exports = {
     }, {}),
   },
 
+  transformer: {
+    assetPlugins: ['expo-asset/tools/hashAssetFiles'],
+    getTransformOptions: async () => ({
+      transform: {
+        experimentalImportSupport: false,
+        inlineRequires: false,
+      },
+    }),
+  },
+
   server: {
     enhanceMiddleware: (middleware) => {
       return (req, res, next) => {
@@ -79,14 +89,5 @@ module.exports = {
         return middleware(req, res, next);
       };
     },
-  },
-
-  transformer: {
-    getTransformOptions: () => ({
-      transform: {
-        experimentalImportSupport: false,
-        inlineRequires: true,
-      },
-    }),
   },
 };

@@ -1,31 +1,31 @@
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import type { NavigatorScreenParams } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import type { NavigatorScreenParams } from '@react-navigation/native';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+
 import Albums from '../Shared/Albums';
-import Contacts from '../Shared/Contacts';
 import Chat from '../Shared/Chat';
+import Contacts from '../Shared/Contacts';
 import SimpleStackScreen, { SimpleStackParams } from './SimpleStack';
 
 type MaterialBottomTabParams = {
-  Article: NavigatorScreenParams<SimpleStackParams>;
-  Albums: undefined;
-  Contacts: undefined;
-  Chat: undefined;
+  TabStack: NavigatorScreenParams<SimpleStackParams>;
+  TabAlbums: undefined;
+  TabContacts: undefined;
+  TabChat: undefined;
 };
 
-const MaterialBottomTabs = createMaterialBottomTabNavigator<
-  MaterialBottomTabParams
->();
+const MaterialBottomTabs =
+  createMaterialBottomTabNavigator<MaterialBottomTabParams>();
 
 export default function MaterialBottomTabsScreen() {
   return (
     <MaterialBottomTabs.Navigator barStyle={styles.tabBar}>
       <MaterialBottomTabs.Screen
-        name="Article"
+        name="TabStack"
         options={{
           tabBarLabel: 'Article',
-          tabBarIcon: 'file-document-box',
+          tabBarIcon: 'file-document',
           tabBarColor: '#C9E7F8',
         }}
       >
@@ -37,7 +37,7 @@ export default function MaterialBottomTabsScreen() {
         )}
       </MaterialBottomTabs.Screen>
       <MaterialBottomTabs.Screen
-        name="Chat"
+        name="TabChat"
         component={Chat}
         options={{
           tabBarLabel: 'Chat',
@@ -47,7 +47,7 @@ export default function MaterialBottomTabsScreen() {
         }}
       />
       <MaterialBottomTabs.Screen
-        name="Contacts"
+        name="TabContacts"
         component={Contacts}
         options={{
           tabBarLabel: 'Contacts',
@@ -56,7 +56,7 @@ export default function MaterialBottomTabsScreen() {
         }}
       />
       <MaterialBottomTabs.Screen
-        name="Albums"
+        name="TabAlbums"
         component={Albums}
         options={{
           tabBarLabel: 'Albums',
