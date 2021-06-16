@@ -1,5 +1,6 @@
 {
   "extends": "satya164",
+  "plugins": ["simple-import-sort"],
   "settings": {
     "react": {
       "version": "16"
@@ -8,12 +9,13 @@
       "@react-navigation/core",
       "@react-navigation/native",
       "@react-navigation/routers",
-      "@react-navigation/compat",
       "@react-navigation/stack",
+      "@react-navigation/native-stack",
       "@react-navigation/drawer",
       "@react-navigation/bottom-tabs",
       "@react-navigation/material-top-tabs",
       "@react-navigation/material-bottom-tabs",
+      "@react-navigation/elements",
       "@react-navigation/devtools"
     ]
   },
@@ -22,6 +24,13 @@
     "node": true
   },
   "rules": {
-    "react/no-unused-prop-types": "off"
-  }
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error"
+  },
+  "overrides": [{
+    "files":["example/e2e/tests/*.ts"],
+    "rules": {
+      "jest/*": 0
+    }
+  }]
 }

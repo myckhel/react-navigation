@@ -1,21 +1,25 @@
-import type * as React from 'react';
+import type { HeaderOptions } from '@react-navigation/elements';
 import type {
-  Animated,
-  TouchableWithoutFeedbackProps,
-  StyleProp,
-  TextStyle,
-  ViewStyle,
-  GestureResponderEvent,
-} from 'react-native';
-import type {
+  Descriptor,
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
-  Descriptor,
-  TabNavigationState,
-  TabActionHelpers,
   RouteProp,
+  TabActionHelpers,
+  TabNavigationState,
 } from '@react-navigation/native';
+import type * as React from 'react';
+import type {
+  Animated,
+  GestureResponderEvent,
+  StyleProp,
+  TextStyle,
+  TouchableWithoutFeedbackProps,
+  ViewStyle,
+} from 'react-native';
+import type { EdgeInsets } from 'react-native-safe-area-context';
+
+export type Layout = { width: number; height: number };
 
 export type BottomTabNavigationEventMap = {
   /**
@@ -38,7 +42,7 @@ export type BottomTabNavigationHelpers = NavigationHelpers<
 
 export type BottomTabNavigationProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = keyof ParamList
 > = NavigationProp<
   ParamList,
   RouteName,
@@ -50,7 +54,7 @@ export type BottomTabNavigationProp<
 
 export type BottomTabScreenProps<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string
+  RouteName extends keyof ParamList = keyof ParamList
 > = {
   navigation: BottomTabNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
@@ -76,16 +80,34 @@ export type TabBarVisibilityAnimationConfig =
   | TimingKeyboardAnimationConfig
   | SpringKeyboardAnimationConfig;
 
-export type BottomTabNavigationOptions = {
+export type BottomTabNavigationOptions = HeaderOptions & {
   /**
    * Title text for the screen.
    */
   title?: string;
 
   /**
+   * Whether this screens should render the first time it's accessed. Defaults to `true`.
+   * Set it to `false` if you want to render the screen on initial render.
+   */
+  lazy?: boolean;
+
+  /**
+   * Function that given returns a React Element to display as a header.
+   */
+  header?: (props: BottomTabHeaderProps) => React.ReactNode;
+
+  /**
+   * Whether to show the header. Setting this to `false` hides the header.
+   * Defaults to `true`.
+   */
+  headerShown?: boolean;
+
+  /**
    * Title string of a tab displayed in the tab bar
    * or a function that given { focused: boolean, color: string, position: 'below-icon' | 'beside-icon' } returns a React.Node to display in tab bar.
-   * When undefined, scene title is used. To hide, see tabBarOptions.showLabel in the previous section.
+   *
+   * When undefined, scene title is used. Use `tabBarShowLabel` to hide the label.
    */
   tabBarLabel?:
     | string
@@ -127,11 +149,6 @@ export type BottomTabNavigationOptions = {
   tabBarTestID?: string;
 
   /**
-   * Boolean indicating whether the tab bar is visible when this screen is active.
-   */
-  tabBarVisible?: boolean;
-
-  /**
    * Animation config for showing and hiding the tab bar.
    */
   tabBarVisibilityAnimationConfig?: {
@@ -146,6 +163,82 @@ export type BottomTabNavigationOptions = {
   tabBarButton?: (props: BottomTabBarButtonProps) => React.ReactNode;
 
   /**
+   * Color for the icon and label in the active tab.
+   */
+  tabBarActiveTintColor?: string;
+
+  /**
+   * Color for the icon and label in the inactive tabs.
+   */
+  tabBarInactiveTintColor?: string;
+
+  /**
+   * Background color for the active tab.
+   */
+  tabBarActiveBackgroundColor?: string;
+
+  /**
+   * background color for the inactive tabs.
+   */
+  tabBarInactiveBackgroundColor?: string;
+
+  /**
+   * Whether label font should scale to respect Text Size accessibility settings.
+   */
+  tabBarAllowFontScaling?: boolean;
+
+  /**
+   * Whether the tab label should be visible. Defaults to `true`.
+   */
+  tabBarShowLabel?: boolean;
+
+  /**
+   * Style object for the tab label.
+   */
+  tabBarLabelStyle?: StyleProp<TextStyle>;
+
+  /**
+   * Style object for the tab icon.
+   */
+  tabBarIconStyle?: StyleProp<TextStyle>;
+
+  /**
+   * Style object for the tab item container.
+   */
+  tabBarItemStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * Whether the label is rendered below the icon or beside the icon.
+   * By default, the position is chosen automatically based on device width.
+   * In `below-icon` orientation (typical for iPhones), the label is rendered below and in `beside-icon` orientation, it's rendered beside (typical for iPad).
+   */
+  tabBarLabelPosition?: LabelPosition;
+
+  /**
+   * Whether the label position should adapt to the orientation.
+   */
+  tabBarAdaptive?: boolean;
+
+  /**
+   * Whether the tab bar gets hidden when the keyboard is shown. Defaults to `false`.
+   */
+  tabBarHideOnKeyboard?: boolean;
+
+  /**
+   * Style object for the tab bar container.
+   */
+  tabBarStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+
+  /**
+   * Component to use as background for the tab bar.
+   * You could render an image, a gradient, blur view etc.
+   *
+   * When using `BlurView`, make sure to set `position: 'absolute'` in `tabBarStyle` as well.
+   * You'd also need to use `useBottomTabBarHeight()` to add a bottom padding to your content.
+   */
+  tabBarBackground?: () => React.ReactNode;
+
+  /**
    * Whether this screen should be unmounted when navigating away from it.
    * Defaults to `false`.
    */
@@ -153,30 +246,28 @@ export type BottomTabNavigationOptions = {
 };
 
 export type BottomTabDescriptor = Descriptor<
-  ParamListBase,
-  string,
-  TabNavigationState<ParamListBase>,
-  BottomTabNavigationOptions
+  BottomTabNavigationOptions,
+  BottomTabNavigationProp<ParamListBase>,
+  RouteProp<ParamListBase>
 >;
 
-export type BottomTabDescriptorMap = {
-  [key: string]: BottomTabDescriptor;
-};
+export type BottomTabDescriptorMap = Record<string, BottomTabDescriptor>;
 
-export type BottomTabNavigationConfig<T = BottomTabBarOptions> = {
-  /**
-   * Whether the screens should render the first time they are accessed. Defaults to `true`.
-   * Set it to `false` if you want to render all screens on initial render.
-   */
-  lazy?: boolean;
+export type BottomTabNavigationConfig = {
   /**
    * Function that returns a React element to display as the tab bar.
    */
-  tabBar?: (props: BottomTabBarProps<T>) => React.ReactNode;
+  tabBar?: (props: BottomTabBarProps) => React.ReactNode;
   /**
-   * Options for the tab bar which will be passed as props to the tab bar component.
+   * Safe area insets for the tab bar. This is used to avoid elements like the navigation bar on Android and bottom safe area on iOS.
+   * By default, the device's safe area insets are automatically detected. You can override the behavior with this option.
    */
-  tabBarOptions?: T;
+  safeAreaInsets?: {
+    top?: number;
+    right?: number;
+    bottom?: number;
+    left?: number;
+  };
   /**
    * Whether inactive screens should be detached from the view hierarchy to save memory.
    * Make sure to call `enableScreens` from `react-native-screens` to make it work.
@@ -189,77 +280,30 @@ export type BottomTabNavigationConfig<T = BottomTabBarOptions> = {
   sceneContainerStyle?: StyleProp<ViewStyle>;
 };
 
-export type BottomTabBarOptions = {
+export type BottomTabHeaderProps = {
   /**
-   * Whether the tab bar gets hidden when the keyboard is shown. Defaults to `false`.
+   * Layout of the screen.
    */
-  keyboardHidesTabBar?: boolean;
+  layout: Layout;
   /**
-   * Color for the icon and label in the active tab.
+   * Options for the current screen.
    */
-  activeTintColor?: string;
+  options: BottomTabNavigationOptions;
   /**
-   * Color for the icon and label in the inactive tabs.
+   * Route object for the current screen.
    */
-  inactiveTintColor?: string;
+  route: RouteProp<ParamListBase>;
   /**
-   * Background color for the active tab.
+   * Navigation prop for the header.
    */
-  activeBackgroundColor?: string;
-  /**
-   * background color for the inactive tabs.
-   */
-  inactiveBackgroundColor?: string;
-  /**
-   * Whether label font should scale to respect Text Size accessibility settings.
-   */
-  allowFontScaling?: boolean;
-  /**
-   * Whether the tab label should be visible. Defaults to `true`.
-   */
-  showLabel?: boolean;
-  /**
-   * Style object for the tab label.
-   */
-  labelStyle?: StyleProp<TextStyle>;
-  /**
-   * Style object for the tab icon.
-   */
-  iconStyle?: StyleProp<TextStyle>;
-  /**
-   * Style object for the tab container.
-   */
-  tabStyle?: StyleProp<ViewStyle>;
-  /**
-   * Whether the label is rendered below the icon or beside the icon.
-   * By default, the position is chosen automatically based on device width.
-   * In `below-icon` orientation (typical for iPhones), the label is rendered below and in `beside-icon` orientation, it's rendered beside (typical for iPad).
-   */
-  labelPosition?: LabelPosition;
-  /**
-   * Whether the label position should adapt to the orientation.
-   */
-  adaptive?: boolean;
-  /**
-   * Safe area insets for the tab bar. This is used to avoid elements like the navigation bar on Android and bottom safe area on iOS.
-   * By default, the device's safe area insets are automatically detected. You can override the behavior with this option.
-   */
-  safeAreaInsets?: {
-    top?: number;
-    right?: number;
-    bottom?: number;
-    left?: number;
-  };
-  /**
-   * Style object for the tab bar container.
-   */
-  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  navigation: BottomTabNavigationProp<ParamListBase>;
 };
 
-export type BottomTabBarProps<T = BottomTabBarOptions> = T & {
+export type BottomTabBarProps = {
   state: TabNavigationState<ParamListBase>;
   descriptors: BottomTabDescriptorMap;
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
+  insets: EdgeInsets;
 };
 
 export type BottomTabBarButtonProps = Omit<

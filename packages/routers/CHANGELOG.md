@@ -3,40 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [5.7.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@5.7.1...@react-navigation/routers@5.7.2) (2021-02-21)
+# [6.0.0-next.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.0.0-next.4...@react-navigation/routers@6.0.0-next.5) (2021-06-10)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+
+
+
+
+# [6.0.0-next.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.0.0-next.3...@react-navigation/routers@6.0.0-next.4) (2021-05-27)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+
+
+
+
+# [6.0.0-next.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.0.0-next.2...@react-navigation/routers@6.0.0-next.3) (2021-05-23)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+
+
+
+
+# [6.0.0-next.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.0.0-next.1...@react-navigation/routers@6.0.0-next.2) (2021-04-08)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+
+
+
+
+# [6.0.0-next.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@6.0.0...@react-navigation/routers@6.0.0-next.1) (2021-03-10)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+
+
+
+
+# [6.0.0-next.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@5.6.2...@react-navigation/routers@6.0.0-next.0) (2021-03-09)
 
 
 ### Bug Fixes
 
-* fix getId being called for incorrect routes. closes [#9343](https://github.com/react-navigation/react-navigation/issues/9343) ([3728390](https://github.com/react-navigation/react-navigation/commit/3728390b60814ba414bd15cc5b7e5b51baa1f026))
+* default to backBehavior: firstRoute for TabRouter ([8bdc6c6](https://github.com/react-navigation/react-navigation/commit/8bdc6c6b9bc957a00a01eec2fcf6f971998c9380))
+* don't merge params on navigation ([366d018](https://github.com/react-navigation/react-navigation/commit/366d0181dc02597b8d11e343f37fc77bee164c70))
+* fix getId being called for incorrect routes. closes [#9343](https://github.com/react-navigation/react-navigation/issues/9343) ([61e653d](https://github.com/react-navigation/react-navigation/commit/61e653d7c484e8ff09045e8635cce4f566a141b4))
+* fix StackRouter incorrectly handling invalid route if key is present ([3367ddf](https://github.com/react-navigation/react-navigation/commit/3367ddf9df5696c2b596deee7342040b8ea50763))
 
 
+### Code Refactoring
 
-
-
-## [5.7.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@5.7.0...@react-navigation/routers@5.7.1) (2021-01-21)
-
-
-### Bug Fixes
-
-* fix StackRouter incorrectly handling invalid route if key is present ([d3a9639](https://github.com/react-navigation/react-navigation/commit/d3a9639060631b06551daf0eac191ec1a442e298))
-
-
-
-
-
-# [5.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@5.6.2...@react-navigation/routers@5.7.0) (2021-01-14)
-
-
-### Bug Fixes
-
-* consider openByDefault prop when rehydrating drawer state ([#9099](https://github.com/react-navigation/react-navigation/issues/9099)) ([2ad61a6](https://github.com/react-navigation/react-navigation/commit/2ad61a67357242fc4663ecad62ab311facbaf1be))
+* don't use a boolean for drawer status ([cda6397](https://github.com/react-navigation/react-navigation/commit/cda6397b8989c552824eca4175577527c9d72f93))
 
 
 ### Features
 
-* add a new backBehavior: firstRoute for TabRouter ([3c87419](https://github.com/react-navigation/react-navigation/commit/3c874191ffbd24b953ded5b62f606c4cc47e5651))
-* add a way to specify an unique ID for screens ([b19f76b](https://github.com/react-navigation/react-navigation/commit/b19f76bfffe623759e67d925bfd067c753a453bf))
+* add a new backBehavior: firstRoute for TabRouter ([7c1cd26](https://github.com/react-navigation/react-navigation/commit/7c1cd261bfe70f14294daa598a5c72c777c911d3))
+* add a way to specify an unique ID for screens ([15b8bb3](https://github.com/react-navigation/react-navigation/commit/15b8bb34584db3cb166f6aafd45f0b95f14fde62))
+* add pressColor and pressOpacity props to drawerItem ([#8834](https://github.com/react-navigation/react-navigation/issues/8834)) ([52dbe4b](https://github.com/react-navigation/react-navigation/commit/52dbe4bd6663430745b07ea379d44d4d4f2944a0))
+* associate path with the route it opens when deep linking ([#9384](https://github.com/react-navigation/react-navigation/issues/9384)) ([86e64fd](https://github.com/react-navigation/react-navigation/commit/86e64fdcd81a57cf3f3bdab4c9035b52984e7009)), closes [#9102](https://github.com/react-navigation/react-navigation/issues/9102)
+
+
+### BREAKING CHANGES
+
+* Drawer status is now a union ('open', 'closed') instead of a boolean. This will let us implement more types of status in future.
+
+Following this the following exports have been renamed as well:
+- getIsDrawerOpenFromState -> getDrawerStatusFromState
+- useIsDrawerOpen -> useDrawerStatus
+* Returning to first route after pressing back seems more common in apps. This commit changes the default for tab and drawer navigators to follow this common practice. To preserve previous behavior, you can pass backBehavior=history to tab and drawer navigators.
+* Previous versions of React Navigation merged params on navigation which caused confusion. This commit changes params not to be merged.
+
+The old behaviour can still be achieved by passing `merge: true` explicitly:
+
+```js
+CommonActions.navigate({
+  name: 'bar',
+  params: { fruit: 'orange' },
+  merge: true,
+})
+```
+`initialParams` specified for the screen are always merged.
 
 
 

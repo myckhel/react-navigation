@@ -1,10 +1,11 @@
 import 'react-native-gesture-handler';
+
+import { Assets } from '@react-navigation/elements';
 import { registerRootComponent } from 'expo';
 import { Asset } from 'expo-asset';
-import { Assets as StackAssets } from '@react-navigation/stack';
 
 import App from './src/index';
 
-Asset.loadAsync(StackAssets);
+Asset.loadAsync(Assets);
 
 registerRootComponent(App);

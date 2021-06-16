@@ -1,26 +1,26 @@
-import * as React from 'react';
-import {
-  Animated,
-  View,
-  StyleSheet,
-  ScrollView,
-  Alert,
-  Platform,
-} from 'react-native';
-import { Button, Appbar } from 'react-native-paper';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTheme, ParamListBase } from '@react-navigation/native';
+import { HeaderBackground, useHeaderHeight } from '@react-navigation/elements';
+import { ParamListBase, useTheme } from '@react-navigation/native';
 import {
   createStackNavigator,
-  StackScreenProps,
-  HeaderBackground,
-  useHeaderHeight,
   Header,
   StackHeaderProps,
+  StackScreenProps,
 } from '@react-navigation/stack';
-import BlurView from '../Shared/BlurView';
-import Article from '../Shared/Article';
+import * as React from 'react';
+import {
+  Alert,
+  Animated,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { Appbar, Button } from 'react-native-paper';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import Albums from '../Shared/Albums';
+import Article from '../Shared/Article';
+import BlurView from '../Shared/BlurView';
 
 type SimpleStackParams = {
   Article: { author: string };
@@ -87,11 +87,10 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<SimpleStackParams>) => {
 
 const SimpleStack = createStackNavigator<SimpleStackParams>();
 
-type Props = Partial<React.ComponentProps<typeof SimpleStack.Navigator>> &
-  StackScreenProps<ParamListBase>;
+type Props = StackScreenProps<ParamListBase>;
 
 function CustomHeader(props: StackHeaderProps) {
-  const { current, next } = props.scene.progress;
+  const { current, next } = props.progress;
 
   const progress = Animated.add(current, next || 0);
   const opacity = progress.interpolate({
@@ -109,7 +108,7 @@ function CustomHeader(props: StackHeaderProps) {
   );
 }
 
-export default function SimpleStackScreen({ navigation, ...rest }: Props) {
+export default function HeaderCustomizationScreen({ navigation }: Props) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -117,19 +116,20 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
   }, [navigation]);
 
   const { colors, dark } = useTheme();
+  const [headerTitleCentered, setHeaderTitleCentered] = React.useState(true);
 
   return (
-    <SimpleStack.Navigator {...rest}>
+    <SimpleStack.Navigator screenOptions={{ headerMode: 'float' }}>
       <SimpleStack.Screen
         name="Article"
         component={ArticleScreen}
         options={({ route }) => ({
           title: `Article by ${route.params?.author}`,
-          header: CustomHeader,
+          header: (props) => <CustomHeader {...props} />,
           headerTintColor: '#fff',
           headerStyle: { backgroundColor: '#ff005d' },
           headerBackTitleVisible: false,
-          headerTitleAlign: 'center',
+          headerTitleAlign: headerTitleCentered ? 'center' : 'left',
           headerBackImage: ({ tintColor }) => (
             <MaterialCommunityIcons
               name="arrow-left-circle-outline"
@@ -142,12 +142,13 @@ export default function SimpleStackScreen({ navigation, ...rest }: Props) {
             <Appbar.Action
               color={tintColor}
               icon="dots-horizontal-circle-outline"
-              onPress={() =>
+              onPress={() => {
+                setHeaderTitleCentered((centered) => !centered);
                 Alert.alert(
                   'Never gonna give you up!',
                   'Never gonna let you down! Never gonna run around and desert you!'
-                )
-              }
+                );
+              }}
             />
           ),
         })}

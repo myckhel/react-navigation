@@ -1,10 +1,10 @@
 import {
   CommonActions,
-  TabRouter,
-  TabActions,
-  TabNavigationState,
   ParamListBase,
   RouterConfigOptions,
+  TabActions,
+  TabNavigationState,
+  TabRouter,
 } from '..';
 
 jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));
@@ -30,7 +30,10 @@ it('gets initial state from route names and params with initialRouteName', () =>
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'baz-test' }],
+    history: [
+      { type: 'route', key: 'bar-test' },
+      { type: 'route', key: 'baz-test' },
+    ],
     stale: false,
     type: 'tab',
   });
@@ -115,7 +118,10 @@ it('gets rehydrated state from partial state', () => {
       { key: 'baz-0', name: 'baz', params: { answer: 42 } },
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'baz-0' }],
+    history: [
+      { type: 'route', key: 'bar-test' },
+      { type: 'route', key: 'baz-0' },
+    ],
     stale: false,
     type: 'tab',
   });
@@ -141,7 +147,10 @@ it('gets rehydrated state from partial state', () => {
       { key: 'baz-1', name: 'baz', params: { answer: 42 } },
       { key: 'qux-2', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'qux-2' }],
+    history: [
+      { type: 'route', key: 'bar-0' },
+      { type: 'route', key: 'qux-2' },
+    ],
     stale: false,
     type: 'tab',
   });
@@ -166,7 +175,10 @@ it('gets rehydrated state from partial state', () => {
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
       { key: 'qux-2', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'qux-2' }],
+    history: [
+      { type: 'route', key: 'bar-0' },
+      { type: 'route', key: 'qux-2' },
+    ],
     stale: false,
     type: 'tab',
   });
@@ -215,10 +227,7 @@ it('gets rehydrated state from partial state', () => {
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [
-      { type: 'route', key: 'qux-test' },
-      { type: 'route', key: 'bar-test' },
-    ],
+    history: [{ type: 'route', key: 'bar-test' }],
     stale: false,
     type: 'tab',
   });
@@ -652,7 +661,10 @@ it('handles navigate action', () => {
       { key: 'baz-1', name: 'baz' },
       { key: 'bar-1', name: 'bar', params: { answer: 42 } },
     ],
-    history: [{ type: 'route', key: 'bar-1' }],
+    history: [
+      { type: 'route', key: 'baz-1' },
+      { type: 'route', key: 'bar-1' },
+    ],
   });
 
   expect(
@@ -682,10 +694,7 @@ it('handles navigate action', () => {
       { key: 'baz', name: 'baz', params: { answer: 42 } },
       { key: 'bar', name: 'bar' },
     ],
-    history: [
-      { type: 'route', key: 'bar' },
-      { type: 'route', key: 'baz' },
-    ],
+    history: [{ type: 'route', key: 'baz' }],
   });
 
   expect(
@@ -1255,11 +1264,152 @@ it('updates route key history on focus change', () => {
   ]);
 });
 
-it('merges params on navigate to an existing screen', () => {
+it('adds path on navigate if provided', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
     routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+          { key: 'qux', name: 'qux' },
+        ],
+        history: [{ type: 'route', key: 'baz' }],
+      },
+      CommonActions.navigate({
+        name: 'bar',
+        path: '/foo/bar',
+      }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar', path: '/foo/bar' },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'baz' },
+      { type: 'route', key: 'bar' },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          {
+            key: 'bar',
+            name: 'bar',
+            path: '/foo/bar',
+          },
+          { key: 'qux', name: 'qux' },
+        ],
+        history: [{ type: 'route', key: 'baz' }],
+      },
+      CommonActions.navigate({
+        name: 'bar',
+        params: { fruit: 'orange' },
+        path: '/foo/baz',
+      }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      {
+        key: 'bar',
+        name: 'bar',
+        params: { fruit: 'orange' },
+        path: '/foo/baz',
+      },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'baz' },
+      { type: 'route', key: 'bar' },
+    ],
+  });
+});
+
+it("doesn't remove existing path on navigate if not provided", () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar', path: '/foo/bar' },
+          { key: 'qux', name: 'qux' },
+        ],
+        history: [{ type: 'route', key: 'baz' }],
+      },
+      CommonActions.navigate({ name: 'bar' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar', path: '/foo/bar' },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'baz' },
+      { type: 'route', key: 'bar' },
+    ],
+  });
+});
+
+it("doesn't merge params on navigate to an existing screen", () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {
+      qux: { color: 'indigo' },
+    },
     routeGetIdList: {},
   };
 
@@ -1289,7 +1439,7 @@ it('merges params on navigate to an existing screen', () => {
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
-      { key: 'bar', name: 'bar', params: { answer: 42 } },
+      { key: 'bar', name: 'bar' },
       { key: 'qux', name: 'qux' },
     ],
     history: [
@@ -1297,104 +1447,6 @@ it('merges params on navigate to an existing screen', () => {
       { type: 'route', key: 'bar' },
     ],
   });
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'tab',
-        key: 'root',
-        index: 1,
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          { key: 'baz', name: 'baz' },
-          { key: 'bar', name: 'bar', params: { answer: 42 } },
-          { key: 'qux', name: 'qux' },
-        ],
-        history: [{ type: 'route', key: 'baz' }],
-      },
-      CommonActions.navigate('bar', { fruit: 'orange' }),
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'tab',
-    key: 'root',
-    index: 1,
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [
-      { key: 'baz', name: 'baz' },
-      { key: 'bar', name: 'bar', params: { answer: 42, fruit: 'orange' } },
-      { key: 'qux', name: 'qux' },
-    ],
-    history: [
-      { type: 'route', key: 'baz' },
-      { type: 'route', key: 'bar' },
-    ],
-  });
-});
-
-it("doesn't merge params on navigate to an existing screen if merge: false", () => {
-  const router = TabRouter({});
-  const options = {
-    routeNames: ['baz', 'bar', 'qux'],
-    routeParamList: {
-      qux: { color: 'indigo' },
-    },
-    routeGetIdList: {},
-  };
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'tab',
-        key: 'root',
-        index: 1,
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          { key: 'baz', name: 'baz' },
-          { key: 'bar', name: 'bar', params: { answer: 42 } },
-          { key: 'qux', name: 'qux' },
-        ],
-        history: [{ type: 'route', key: 'baz' }],
-      },
-      {
-        type: 'NAVIGATE',
-        payload: {
-          name: 'bar',
-          merge: false,
-        },
-      },
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'tab',
-    key: 'root',
-    index: 1,
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [
-      { key: 'baz', name: 'baz' },
-      { key: 'bar', name: 'bar', params: { answer: 42 } },
-      { key: 'qux', name: 'qux' },
-    ],
-    history: [
-      { type: 'route', key: 'baz' },
-      { type: 'route', key: 'bar' },
-    ],
-  });
-});
-
-it('merges params on navigate to an existing screen if merge: true', () => {
-  const router = TabRouter({});
-  const options: RouterConfigOptions = {
-    routeNames: ['baz', 'bar', 'qux'],
-    routeParamList: {
-      qux: { color: 'indigo' },
-    },
-    routeGetIdList: {},
-  };
 
   expect(
     router.getStateForAction(
@@ -1411,14 +1463,7 @@ it('merges params on navigate to an existing screen if merge: true', () => {
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      {
-        type: 'NAVIGATE',
-        payload: {
-          name: 'bar',
-          params: { fruit: 'orange' },
-          merge: false,
-        },
-      },
+      CommonActions.navigate('bar', { fruit: 'orange' }),
       options
     )
   ).toEqual({
@@ -1453,14 +1498,7 @@ it('merges params on navigate to an existing screen if merge: true', () => {
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      {
-        type: 'NAVIGATE',
-        payload: {
-          name: 'qux',
-          params: { test: 12 },
-          merge: false,
-        },
-      },
+      CommonActions.navigate('qux', { test: 12 }),
       options
     )
   ).toEqual({
@@ -1481,7 +1519,7 @@ it('merges params on navigate to an existing screen if merge: true', () => {
   });
 });
 
-it('merges params on jump to an existing screen', () => {
+it('merges params on navigate to an existing screen if merge: true', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1504,7 +1542,10 @@ it('merges params on jump to an existing screen', () => {
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      TabActions.jumpTo('bar'),
+      CommonActions.navigate({
+        name: 'bar',
+        merge: true,
+      }),
       options
     )
   ).toEqual({
@@ -1539,7 +1580,11 @@ it('merges params on jump to an existing screen', () => {
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      TabActions.jumpTo('bar', { fruit: 'orange' }),
+      CommonActions.navigate({
+        name: 'bar',
+        params: { fruit: 'orange' },
+        merge: true,
+      }),
       options
     )
   ).toEqual({
@@ -1551,6 +1596,85 @@ it('merges params on jump to an existing screen', () => {
     routes: [
       { key: 'baz', name: 'baz' },
       { key: 'bar', name: 'bar', params: { answer: 42, fruit: 'orange' } },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'baz' },
+      { type: 'route', key: 'bar' },
+    ],
+  });
+});
+
+it("doesn't merge params on jump to an existing screen", () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar', params: { answer: 42 } },
+          { key: 'qux', name: 'qux' },
+        ],
+        history: [{ type: 'route', key: 'baz' }],
+      },
+      TabActions.jumpTo('bar'),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+      { key: 'qux', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'baz' },
+      { type: 'route', key: 'bar' },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar', params: { answer: 42 } },
+          { key: 'qux', name: 'qux' },
+        ],
+        history: [{ type: 'route', key: 'baz' }],
+      },
+      TabActions.jumpTo('bar', { fruit: 'orange' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
       { key: 'qux', name: 'qux' },
     ],
     history: [
