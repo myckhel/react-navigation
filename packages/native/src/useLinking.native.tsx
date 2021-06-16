@@ -1,10 +1,12 @@
-import * as React from 'react';
-import { Linking, Platform } from 'react-native';
 import {
   getActionFromState as getActionFromStateDefault,
   getStateFromPath as getStateFromPathDefault,
   NavigationContainerRef,
+  ParamListBase,
 } from '@react-navigation/core';
+import * as React from 'react';
+import { Linking, Platform } from 'react-native';
+
 import extractPathFromURL from './extractPathFromURL';
 import type { LinkingOptions } from './types';
 
@@ -13,7 +15,7 @@ type ResultState = ReturnType<typeof getStateFromPathDefault>;
 let isUsingLinking = false;
 
 export default function useLinking(
-  ref: React.RefObject<NavigationContainerRef>,
+  ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
   {
     enabled = true,
     prefixes,
@@ -30,13 +32,22 @@ export default function useLinking(
     subscribe = (listener) => {
       const callback = ({ url }: { url: string }) => listener(url);
 
-      Linking.addEventListener('url', callback);
+      const subscription = Linking.addEventListener('url', callback) as
+        | { remove(): void }
+        | undefined;
 
-      return () => Linking.removeEventListener('url', callback);
+      return () => {
+        // https://github.com/facebook/react-native/commit/6d1aca806cee86ad76de771ed3a1cc62982ebcd7
+        if (subscription?.remove) {
+          subscription.remove();
+        } else {
+          Linking.removeEventListener('url', callback);
+        }
+      };
     },
     getStateFromPath = getStateFromPathDefault,
     getActionFromState = getActionFromStateDefault,
-  }: LinkingOptions
+  }: LinkingOptions<ParamListBase>
 ) {
   React.useEffect(() => {
     if (enabled !== false && isUsingLinking) {

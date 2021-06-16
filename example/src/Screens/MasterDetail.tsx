@@ -1,21 +1,21 @@
+import {
+  createDrawerNavigator,
+  DrawerContent,
+  DrawerContentComponentProps,
+  DrawerScreenProps,
+} from '@react-navigation/drawer';
+import {
+  ParamListBase,
+  useNavigation,
+  useTheme,
+} from '@react-navigation/native';
+import type { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
 import { Dimensions, ScaledSize } from 'react-native';
 import { Appbar } from 'react-native-paper';
-import {
-  useTheme,
-  useNavigation,
-  ParamListBase,
-} from '@react-navigation/native';
-import {
-  createDrawerNavigator,
-  DrawerScreenProps,
-  DrawerContent,
-  DrawerContentComponentProps,
-  DrawerContentOptions,
-} from '@react-navigation/drawer';
-import type { StackScreenProps } from '@react-navigation/stack';
-import Article from '../Shared/Article';
+
 import Albums from '../Shared/Albums';
+import Article from '../Shared/Article';
 import NewsFeed from '../Shared/NewsFeed';
 
 type DrawerParams = {
@@ -91,9 +91,7 @@ const AlbumsScreen = ({
   );
 };
 
-const CustomDrawerContent = (
-  props: DrawerContentComponentProps<DrawerContentOptions>
-) => {
+const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const { colors } = useTheme();
   const navigation = useNavigation();
 
@@ -125,11 +123,15 @@ export default function DrawerScreen({ navigation, ...rest }: Props) {
 
   return (
     <Drawer.Navigator
-      openByDefault
-      drawerType={isLargeScreen ? 'permanent' : 'back'}
-      drawerStyle={isLargeScreen ? null : { width: '100%' }}
-      overlayColor="transparent"
+      defaultStatus="open"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
+      screenOptions={{
+        headerShown: false,
+        drawerType: isLargeScreen ? 'permanent' : 'back',
+        drawerStyle: isLargeScreen ? null : { width: '100%' },
+        drawerContentContainerStyle: { paddingTop: 4 },
+        overlayColor: 'transparent',
+      }}
       {...rest}
     >
       <Drawer.Screen name="Article" component={ArticleScreen} />

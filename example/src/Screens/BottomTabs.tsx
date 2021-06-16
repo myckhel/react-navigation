@@ -1,62 +1,42 @@
-import * as React from 'react';
-import { View, ScrollView, StyleSheet, Platform } from 'react-native';
-import { Button } from 'react-native-paper';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {
-  getFocusedRouteNameFromRoute,
-  ParamListBase,
-  NavigatorScreenParams,
-} from '@react-navigation/native';
-import type { StackScreenProps } from '@react-navigation/stack';
 import {
   createBottomTabNavigator,
-  BottomTabScreenProps,
+  useBottomTabBarHeight,
 } from '@react-navigation/bottom-tabs';
-import TouchableBounce from '../Shared/TouchableBounce';
+import { HeaderBackButton } from '@react-navigation/elements';
+import {
+  getFocusedRouteNameFromRoute,
+  NavigatorScreenParams,
+  ParamListBase,
+} from '@react-navigation/native';
+import type { StackScreenProps } from '@react-navigation/stack';
+import { BlurView } from 'expo-blur';
+import * as React from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import Albums from '../Shared/Albums';
-import Contacts from '../Shared/Contacts';
 import Chat from '../Shared/Chat';
+import Contacts from '../Shared/Contacts';
 import SimpleStackScreen, { SimpleStackParams } from './SimpleStack';
 
-const getTabBarIcon = (name: string) => ({
-  color,
-  size,
-}: {
-  color: string;
-  size: number;
-}) => <MaterialCommunityIcons name={name} color={color} size={size} />;
+const getTabBarIcon =
+  (name: string) =>
+  ({ color, size }: { color: string; size: number }) =>
+    <MaterialCommunityIcons name={name} color={color} size={size} />;
 
 type BottomTabParams = {
-  Article: NavigatorScreenParams<SimpleStackParams>;
-  Albums: undefined;
-  Contacts: undefined;
-  Chat: undefined;
+  TabStack: NavigatorScreenParams<SimpleStackParams>;
+  TabAlbums: undefined;
+  TabContacts: undefined;
+  TabChat: undefined;
 };
 
-const scrollEnabled = Platform.select({ web: true, default: false });
+const AlbumsScreen = () => {
+  const tabBarHeight = useBottomTabBarHeight();
 
-const AlbumsScreen = ({
-  navigation,
-}: BottomTabScreenProps<BottomTabParams>) => {
   return (
-    <ScrollView>
-      <View style={styles.buttons}>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.setOptions({ tabBarVisible: false })}
-          style={styles.button}
-        >
-          Hide tab bar
-        </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.setOptions({ tabBarVisible: true })}
-          style={styles.button}
-        >
-          Show tab bar
-        </Button>
-      </View>
-      <Albums scrollEnabled={scrollEnabled} />
+    <ScrollView contentContainerStyle={{ paddingBottom: tabBarHeight }}>
+      <Albums scrollEnabled={false} />
     </ScrollView>
   );
 };
@@ -71,6 +51,7 @@ export default function BottomTabsScreen({
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
+      headerShown: false,
       title: routeName,
     });
   }, [navigation, routeName]);
@@ -78,28 +59,21 @@ export default function BottomTabsScreen({
   return (
     <BottomTabs.Navigator
       screenOptions={{
-        tabBarButton:
-          Platform.OS === 'web'
-            ? undefined
-            : (props) => <TouchableBounce {...props} />,
+        headerLeft: (props) => (
+          <HeaderBackButton {...props} onPress={navigation.goBack} />
+        ),
       }}
     >
       <BottomTabs.Screen
-        name="Article"
+        name="TabStack"
+        component={SimpleStackScreen}
         options={{
           title: 'Article',
-          tabBarIcon: getTabBarIcon('file-document-box'),
+          tabBarIcon: getTabBarIcon('file-document'),
         }}
-      >
-        {(props) => (
-          <SimpleStackScreen
-            {...props}
-            screenOptions={{ headerShown: false }}
-          />
-        )}
-      </BottomTabs.Screen>
+      />
       <BottomTabs.Screen
-        name="Chat"
+        name="TabChat"
         component={Chat}
         options={{
           tabBarLabel: 'Chat',
@@ -108,7 +82,7 @@ export default function BottomTabsScreen({
         }}
       />
       <BottomTabs.Screen
-        name="Contacts"
+        name="TabContacts"
         component={Contacts}
         options={{
           title: 'Contacts',
@@ -116,23 +90,21 @@ export default function BottomTabsScreen({
         }}
       />
       <BottomTabs.Screen
-        name="Albums"
+        name="TabAlbums"
         component={AlbumsScreen}
         options={{
           title: 'Albums',
           tabBarIcon: getTabBarIcon('image-album'),
+          tabBarStyle: { position: 'absolute' },
+          tabBarBackground: () => (
+            <BlurView
+              tint="light"
+              intensity={100}
+              style={StyleSheet.absoluteFill}
+            />
+          ),
         }}
       />
     </BottomTabs.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  buttons: {
-    flexDirection: 'row',
-    padding: 8,
-  },
-  button: {
-    margin: 8,
-  },
-});

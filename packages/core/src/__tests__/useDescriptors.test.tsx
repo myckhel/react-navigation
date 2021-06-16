@@ -1,13 +1,14 @@
-import * as React from 'react';
-import { render, act } from '@testing-library/react-native';
 import type {
   DefaultRouterOptions,
   NavigationState,
   Router,
 } from '@react-navigation/routers';
-import useNavigationBuilder from '../useNavigationBuilder';
+import { act, render } from '@testing-library/react-native';
+import * as React from 'react';
+
 import BaseNavigationContainer from '../BaseNavigationContainer';
 import Screen from '../Screen';
+import useNavigationBuilder from '../useNavigationBuilder';
 import MockRouter, {
   MockActions,
   MockRouterKey,
@@ -600,14 +601,14 @@ it('returns true for canGoBack when parent router handles GO_BACK', () => {
   const root = (
     <BaseNavigationContainer>
       <TestNavigator>
-        <Screen name="baz">
+        <Screen name="foo">
           {() => (
             <TestNavigator>
-              <Screen name="qux" component={TestScreen} />
+              <Screen name="bar" component={TestScreen} />
             </TestNavigator>
           )}
         </Screen>
-        <Screen name="qux">
+        <Screen name="baz">
           {() => (
             <OverrodeNavigator>
               <Screen name="qux">{() => null}</Screen>

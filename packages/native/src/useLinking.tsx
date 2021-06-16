@@ -1,12 +1,15 @@
-import * as React from 'react';
 import {
-  getStateFromPath as getStateFromPathDefault,
-  getPathFromState as getPathFromStateDefault,
+  findFocusedRoute,
   getActionFromState as getActionFromStateDefault,
+  getPathFromState as getPathFromStateDefault,
+  getStateFromPath as getStateFromPathDefault,
   NavigationContainerRef,
   NavigationState,
+  ParamListBase,
 } from '@react-navigation/core';
 import { nanoid } from 'nanoid/non-secure';
+import * as React from 'react';
+
 import ServerContext from './ServerContext';
 import type { LinkingOptions } from './types';
 
@@ -287,14 +290,14 @@ const series = (cb: () => Promise<void>) => {
 let isUsingLinking = false;
 
 export default function useLinking(
-  ref: React.RefObject<NavigationContainerRef>,
+  ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
   {
     enabled = true,
     config,
     getStateFromPath = getStateFromPathDefault,
     getPathFromState = getPathFromStateDefault,
     getActionFromState = getActionFromStateDefault,
-  }: LinkingOptions
+  }: LinkingOptions<ParamListBase>
 ) {
   React.useEffect(() => {
     if (enabled !== false && isUsingLinking) {
@@ -324,15 +327,15 @@ export default function useLinking(
   const enabledRef = React.useRef(enabled);
   const configRef = React.useRef(config);
   const getStateFromPathRef = React.useRef(getStateFromPath);
-  const getActionFromStateRef = React.useRef(getActionFromState);
   const getPathFromStateRef = React.useRef(getPathFromState);
+  const getActionFromStateRef = React.useRef(getActionFromState);
 
   React.useEffect(() => {
     enabledRef.current = enabled;
     configRef.current = config;
     getStateFromPathRef.current = getStateFromPath;
-    getActionFromStateRef.current = getActionFromState;
     getPathFromStateRef.current = getPathFromState;
+    getActionFromStateRef.current = getActionFromState;
   });
 
   const server = React.useContext(ServerContext);
@@ -453,7 +456,9 @@ export default function useLinking(
       const state = ref.current.getRootState();
 
       if (state) {
-        const path = getPathFromStateRef.current(state, configRef.current);
+        const route = findFocusedRoute(state);
+        const path =
+          route?.path ?? getPathFromStateRef.current(state, configRef.current);
 
         if (previousStateRef.current === undefined) {
           previousStateRef.current = state;
@@ -474,7 +479,9 @@ export default function useLinking(
       const state = navigation.getRootState();
 
       const pendingPath = pendingPopStatePathRef.current;
-      const path = getPathFromStateRef.current(state, configRef.current);
+      const route = findFocusedRoute(state);
+      const path =
+        route?.path ?? getPathFromStateRef.current(state, configRef.current);
 
       previousStateRef.current = state;
       pendingPopStatePathRef.current = undefined;

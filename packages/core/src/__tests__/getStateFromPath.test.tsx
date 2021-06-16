@@ -1,8 +1,19 @@
-import getStateFromPath from '../getStateFromPath';
+import type { InitialState } from '@react-navigation/routers';
+import produce from 'immer';
+
+import findFocusedRoute from '../findFocusedRoute';
 import getPathFromState from '../getPathFromState';
+import getStateFromPath from '../getStateFromPath';
+
+const changePath = <T extends InitialState>(state: T, path: string): T =>
+  produce(state, (draftState) => {
+    const route = findFocusedRoute(draftState);
+    // @ts-expect-error: immer won't mutate this
+    route.path = path;
+  });
 
 it('returns undefined for invalid path', () => {
-  expect(getStateFromPath('//')).toBe(undefined);
+  expect(getStateFromPath<object>('//')).toBe(undefined);
 });
 
 it('converts path string to initial state', () => {
@@ -20,6 +31,7 @@ it('converts path string to initial state', () => {
                   {
                     name: 'baz qux',
                     params: { author: 'jane & co', valid: 'true' },
+                    path,
                   },
                 ],
               },
@@ -30,8 +42,10 @@ it('converts path string to initial state', () => {
     ],
   };
 
-  expect(getStateFromPath(path)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state))).toEqual(state);
+  expect(getStateFromPath<object>(path)).toEqual(state);
+  expect(getStateFromPath<object>(getPathFromState<object>(state))).toEqual(
+    changePath(state, '/foo/bar/baz%20qux?author=jane%20%26%20co&valid=true')
+  );
 });
 
 it('converts path string to initial state with config', () => {
@@ -82,6 +96,7 @@ it('converts path string to initial state with config', () => {
                       answer: '42',
                       valid: true,
                     },
+                    path,
                   },
                 ],
               },
@@ -92,70 +107,16 @@ it('converts path string to initial state with config', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
-});
-
-it('converts path string to initial state with config (legacy)', () => {
-  const path = '/foo/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true';
-  const config = {
-    Foo: 'foo',
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      path: 'baz/:author',
-      parse: {
-        author: (author: string) =>
-          author.replace(/^\w/, (c) => c.toUpperCase()),
-        count: Number,
-        valid: Boolean,
-      },
-      stringify: {
-        author: (author: string) => author.toLowerCase(),
-      },
-    },
-  };
-
-  const state = {
-    routes: [
-      {
-        name: 'Foo',
-        state: {
-          routes: [
-            {
-              name: 'Bar',
-              params: { fruit: 'apple', type: 'sweet' },
-              state: {
-                routes: [
-                  {
-                    name: 'Baz',
-                    params: {
-                      author: 'Jane',
-                      count: 10,
-                      answer: '42',
-                      valid: true,
-                    },
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      },
-    ],
-  };
-
-  // @ts-expect-error: legacy config
-  expect(getStateFromPath(path, config)).toEqual(state);
-  // @ts-expect-error: legacy config
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles leading slash when converting', () => {
-  expect(getStateFromPath('/foo/bar/?count=42')).toEqual({
+  const path = '/foo/bar/?count=42';
+
+  expect(getStateFromPath<object>(path)).toEqual({
     routes: [
       {
         name: 'foo',
@@ -164,6 +125,7 @@ it('handles leading slash when converting', () => {
             {
               name: 'bar',
               params: { count: '42' },
+              path,
             },
           ],
         },
@@ -173,7 +135,9 @@ it('handles leading slash when converting', () => {
 });
 
 it('handles ending slash when converting', () => {
-  expect(getStateFromPath('foo/bar/?count=42')).toEqual({
+  const path = 'foo/bar/?count=42';
+
+  expect(getStateFromPath<object>(path)).toEqual({
     routes: [
       {
         name: 'foo',
@@ -182,6 +146,7 @@ it('handles ending slash when converting', () => {
             {
               name: 'bar',
               params: { count: '42' },
+              path,
             },
           ],
         },
@@ -197,14 +162,16 @@ it('handles route without param', () => {
       {
         name: 'foo',
         state: {
-          routes: [{ name: 'bar' }],
+          routes: [{ name: 'bar', path }],
         },
       },
     ],
   };
 
-  expect(getStateFromPath(path)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state))).toEqual(state);
+  expect(getStateFromPath<object>(path)).toEqual(state);
+  expect(getStateFromPath<object>(getPathFromState<object>(state))).toEqual(
+    changePath(state, '/foo/bar')
+  );
 });
 
 it('converts path string to initial state with config with nested screens', () => {
@@ -265,6 +232,7 @@ it('converts path string to initial state with config with nested screens', () =
                             answer: '42',
                             valid: true,
                           },
+                          path,
                         },
                       ],
                     },
@@ -278,81 +246,10 @@ it('converts path string to initial state with config with nested screens', () =
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
-});
-
-it('converts path string to initial state with config with nested screens (legacy)', () => {
-  const path = '/foe/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true';
-  const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
-          exact: true,
-        },
-      },
-    },
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      path: 'baz/:author',
-      parse: {
-        author: (author: string) =>
-          author.replace(/^\w/, (c) => c.toUpperCase()),
-        count: Number,
-        valid: Boolean,
-      },
-      stringify: {
-        author: (author: string) => author.toLowerCase(),
-      },
-    },
-  };
-
-  const state = {
-    routes: [
-      {
-        name: 'Foo',
-        state: {
-          routes: [
-            {
-              name: 'Foe',
-              state: {
-                routes: [
-                  {
-                    name: 'Bar',
-                    params: { fruit: 'apple', type: 'sweet' },
-                    state: {
-                      routes: [
-                        {
-                          name: 'Baz',
-                          params: {
-                            author: 'Jane',
-                            count: 10,
-                            answer: '42',
-                            valid: true,
-                          },
-                        },
-                      ],
-                    },
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      },
-    ],
-  };
-
-  // @ts-expect-error: legacy config
-  expect(getStateFromPath(path, config)).toEqual(state);
-  // @ts-expect-error: legacy config
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('converts path string to initial state with config with nested screens and unused parse functions', () => {
@@ -401,6 +298,7 @@ it('converts path string to initial state with config with nested screens and un
                       answer: '42',
                       valid: true,
                     },
+                    path,
                   },
                 ],
               },
@@ -411,70 +309,10 @@ it('converts path string to initial state with config with nested screens and un
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
-});
-
-it('converts path string to initial state with config with nested screens and unused parse functions (legacy)', () => {
-  const path = '/foe/baz/jane?count=10&answer=42&valid=true';
-  const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
-          exact: true,
-        },
-      },
-    },
-    Baz: {
-      path: 'baz/:author',
-      parse: {
-        author: (author: string) =>
-          author.replace(/^\w/, (c) => c.toUpperCase()),
-        count: Number,
-        valid: Boolean,
-        id: Boolean,
-      },
-    },
-  };
-
-  const state = {
-    routes: [
-      {
-        name: 'Foo',
-        state: {
-          routes: [
-            {
-              name: 'Foe',
-              state: {
-                routes: [
-                  {
-                    name: 'Baz',
-                    params: {
-                      author: 'Jane',
-                      count: 10,
-                      answer: '42',
-                      valid: true,
-                    },
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      },
-    ],
-  };
-
-  // @ts-expect-error: legacy config
-  expect(getStateFromPath(path, config)).toEqual(state);
-  // @ts-expect-error: legacy config
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/foe/baz/Jane?count=10&answer=42&valid=true'));
 });
 
 it('handles nested object with unused configs and with parse in it', () => {
@@ -546,6 +384,7 @@ it('handles nested object with unused configs and with parse in it', () => {
                                   answer: '42',
                                   valid: true,
                                 },
+                                path,
                               },
                             ],
                           },
@@ -562,99 +401,10 @@ it('handles nested object with unused configs and with parse in it', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
-});
-
-it('handles nested object with unused configs and with parse in it (legacy)', () => {
-  const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
-  const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
-          exact: true,
-        },
-      },
-    },
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      path: 'baz',
-      screens: {
-        Bos: {
-          path: 'bos',
-          exact: true,
-        },
-        Bis: {
-          path: 'bis/:author',
-          exact: true,
-          stringify: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toLowerCase()),
-          },
-          parse: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toUpperCase()),
-            count: Number,
-            valid: Boolean,
-          },
-        },
-      },
-    },
-  };
-
-  const state = {
-    routes: [
-      {
-        name: 'Bar',
-        params: { fruit: 'apple', type: 'sweet' },
-        state: {
-          routes: [
-            {
-              name: 'Foo',
-              state: {
-                routes: [
-                  {
-                    name: 'Foe',
-                    state: {
-                      routes: [
-                        {
-                          name: 'Baz',
-                          state: {
-                            routes: [
-                              {
-                                name: 'Bis',
-                                params: {
-                                  author: 'Jane',
-                                  count: 10,
-                                  answer: '42',
-                                  valid: true,
-                                },
-                              },
-                            ],
-                          },
-                        },
-                      ],
-                    },
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      },
-    ],
-  };
-
-  // @ts-expect-error: legacy config
-  expect(getStateFromPath(path, config)).toEqual(state);
-  // @ts-expect-error: legacy config
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles parse in nested object for second route depth', () => {
@@ -692,7 +442,7 @@ it('handles parse in nested object for second route depth', () => {
             {
               name: 'Bar',
               state: {
-                routes: [{ name: 'Baz' }],
+                routes: [{ name: 'Baz', path }],
               },
             },
           ],
@@ -701,10 +451,10 @@ it('handles parse in nested object for second route depth', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles parse in nested object for second route depth and and path and parse in roots', () => {
@@ -743,7 +493,7 @@ it('handles parse in nested object for second route depth and and path and parse
             {
               name: 'Bar',
               state: {
-                routes: [{ name: 'Baz' }],
+                routes: [{ name: 'Baz', path }],
               },
             },
           ],
@@ -752,10 +502,10 @@ it('handles parse in nested object for second route depth and and path and parse
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles initialRouteName at top level', () => {
@@ -787,7 +537,7 @@ it('handles initialRouteName at top level', () => {
             {
               name: 'Bar',
               state: {
-                routes: [{ name: 'Baz' }],
+                routes: [{ name: 'Baz', path }],
               },
             },
           ],
@@ -796,10 +546,10 @@ it('handles initialRouteName at top level', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles initialRouteName inside a screen', () => {
@@ -833,7 +583,7 @@ it('handles initialRouteName inside a screen', () => {
             {
               name: 'Bar',
               state: {
-                routes: [{ name: 'Baz' }],
+                routes: [{ name: 'Baz', path }],
               },
             },
           ],
@@ -842,10 +592,10 @@ it('handles initialRouteName inside a screen', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles initialRouteName included in path', () => {
@@ -875,7 +625,7 @@ it('handles initialRouteName included in path', () => {
             {
               name: 'Foe',
               state: {
-                routes: [{ name: 'Baz' }],
+                routes: [{ name: 'Baz', path }],
               },
             },
           ],
@@ -884,14 +634,14 @@ it('handles initialRouteName included in path', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles two initialRouteNames', () => {
-  const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
+  const path = '/bar/sweet/apple/foe/bis/jane?answer=42&count=10&valid=true';
   const config = {
     screens: {
       Bar: {
@@ -957,11 +707,12 @@ it('handles two initialRouteNames', () => {
                               {
                                 name: 'Bis',
                                 params: {
+                                  answer: '42',
                                   author: 'Jane',
                                   count: 10,
-                                  answer: '42',
                                   valid: true,
                                 },
+                                path,
                               },
                             ],
                           },
@@ -978,105 +729,14 @@ it('handles two initialRouteNames', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
-});
-
-it('handles two initialRouteNames (legacy)', () => {
-  const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
-  const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
-          exact: true,
-        },
-      },
-    },
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      initialRouteName: 'Bos',
-      screens: {
-        Bos: {
-          path: 'bos',
-          exact: true,
-        },
-        Bis: {
-          path: 'bis/:author',
-          exact: true,
-          stringify: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toLowerCase()),
-          },
-          parse: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toUpperCase()),
-            count: Number,
-            valid: Boolean,
-          },
-        },
-      },
-    },
-  };
-
-  const state = {
-    routes: [
-      {
-        name: 'Bar',
-        params: { fruit: 'apple', type: 'sweet' },
-        state: {
-          routes: [
-            {
-              name: 'Foo',
-              state: {
-                routes: [
-                  {
-                    name: 'Foe',
-                    state: {
-                      routes: [
-                        {
-                          name: 'Baz',
-                          state: {
-                            index: 1,
-                            routes: [
-                              { name: 'Bos' },
-                              {
-                                name: 'Bis',
-                                params: {
-                                  author: 'Jane',
-                                  count: 10,
-                                  answer: '42',
-                                  valid: true,
-                                },
-                              },
-                            ],
-                          },
-                        },
-                      ],
-                    },
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      },
-    ],
-  };
-
-  // @ts-expect-error: legacy config
-  expect(getStateFromPath(path, config)).toEqual(state);
-  // @ts-expect-error: legacy config
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('accepts initialRouteName without config for it', () => {
-  const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
+  const path = '/bar/sweet/apple/foe/bis/jane?answer=42&count=10&valid=true';
   const config = {
     screens: {
       Bar: {
@@ -1142,11 +802,12 @@ it('accepts initialRouteName without config for it', () => {
                               {
                                 name: 'Bis',
                                 params: {
+                                  answer: '42',
                                   author: 'Jane',
                                   count: 10,
-                                  answer: '42',
                                   valid: true,
                                 },
+                                path,
                               },
                             ],
                           },
@@ -1163,101 +824,10 @@ it('accepts initialRouteName without config for it', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
-});
-
-it('accepts initialRouteName without config for it (legacy)', () => {
-  const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
-  const config = {
-    Foo: {
-      path: 'foo',
-      screens: {
-        Foe: {
-          path: 'foe',
-          exact: true,
-        },
-      },
-    },
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      initialRouteName: 'Bas',
-      screens: {
-        Bos: {
-          path: 'bos',
-          exact: true,
-        },
-        Bis: {
-          path: 'bis/:author',
-          exact: true,
-          stringify: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toLowerCase()),
-          },
-          parse: {
-            author: (author: string) =>
-              author.replace(/^\w/, (c) => c.toUpperCase()),
-            count: Number,
-            valid: Boolean,
-          },
-        },
-      },
-    },
-  };
-
-  const state = {
-    routes: [
-      {
-        name: 'Bar',
-        params: { fruit: 'apple', type: 'sweet' },
-        state: {
-          routes: [
-            {
-              name: 'Foo',
-              state: {
-                routes: [
-                  {
-                    name: 'Foe',
-                    state: {
-                      routes: [
-                        {
-                          name: 'Baz',
-                          state: {
-                            index: 1,
-                            routes: [
-                              { name: 'Bas' },
-                              {
-                                name: 'Bis',
-                                params: {
-                                  author: 'Jane',
-                                  count: 10,
-                                  answer: '42',
-                                  valid: true,
-                                },
-                              },
-                            ],
-                          },
-                        },
-                      ],
-                    },
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      },
-    ],
-  };
-
-  // @ts-expect-error: legacy config
-  expect(getStateFromPath(path, config)).toEqual(state);
-  // @ts-expect-error: legacy config
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('returns undefined if path is empty and no matching screen is present', () => {
@@ -1278,7 +848,7 @@ it('returns undefined if path is empty and no matching screen is present', () =>
 
   const path = '';
 
-  expect(getStateFromPath(path, config)).toEqual(undefined);
+  expect(getStateFromPath<object>(path, config)).toEqual(undefined);
 });
 
 it('returns matching screen if path is empty', () => {
@@ -1308,7 +878,7 @@ it('returns matching screen if path is empty', () => {
             {
               name: 'Bar',
               state: {
-                routes: [{ name: 'Qux' }],
+                routes: [{ name: 'Qux', path }],
               },
             },
           ],
@@ -1317,10 +887,10 @@ it('returns matching screen if path is empty', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/'));
 });
 
 it('returns matching screen with params if path is empty', () => {
@@ -1353,7 +923,7 @@ it('returns matching screen with params if path is empty', () => {
             {
               name: 'Bar',
               state: {
-                routes: [{ name: 'Qux', params: { foo: 42 } }],
+                routes: [{ name: 'Qux', params: { foo: 42 }, path }],
               },
             },
           ],
@@ -1362,10 +932,10 @@ it('returns matching screen with params if path is empty', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/?foo=42'));
 });
 
 it("doesn't match nested screen if path is empty", () => {
@@ -1390,7 +960,7 @@ it("doesn't match nested screen if path is empty", () => {
 
   const path = '';
 
-  expect(getStateFromPath(path, config)).toEqual(undefined);
+  expect(getStateFromPath<object>(path, config)).toEqual(undefined);
 });
 
 it('chooses more exhaustive pattern', () => {
@@ -1427,6 +997,7 @@ it('chooses more exhaustive pattern', () => {
             {
               name: 'Bis',
               params: { id: 5 },
+              path,
             },
           ],
         },
@@ -1434,10 +1005,10 @@ it('chooses more exhaustive pattern', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles same paths beginnings', () => {
@@ -1470,6 +1041,7 @@ it('handles same paths beginnings', () => {
             },
             {
               name: 'Bis',
+              path,
             },
           ],
         },
@@ -1477,10 +1049,10 @@ it('handles same paths beginnings', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles same paths beginnings with params', () => {
@@ -1517,6 +1089,7 @@ it('handles same paths beginnings with params', () => {
             {
               name: 'Bis',
               params: { id: 5 },
+              path,
             },
           ],
         },
@@ -1524,10 +1097,10 @@ it('handles same paths beginnings with params', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles not taking path with too many segments', () => {
@@ -1571,6 +1144,7 @@ it('handles not taking path with too many segments', () => {
             {
               name: 'Bis',
               params: { id: 5 },
+              path,
             },
           ],
         },
@@ -1578,10 +1152,10 @@ it('handles not taking path with too many segments', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles differently ordered params v1', () => {
@@ -1625,6 +1199,7 @@ it('handles differently ordered params v1', () => {
             {
               name: 'Bas',
               params: { id: 5, pwd: 20 },
+              path,
             },
           ],
         },
@@ -1632,10 +1207,10 @@ it('handles differently ordered params v1', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles differently ordered params v2', () => {
@@ -1679,6 +1254,7 @@ it('handles differently ordered params v2', () => {
             {
               name: 'Bas',
               params: { id: 5, pwd: 20 },
+              path,
             },
           ],
         },
@@ -1686,10 +1262,10 @@ it('handles differently ordered params v2', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles differently ordered params v3', () => {
@@ -1733,6 +1309,7 @@ it('handles differently ordered params v3', () => {
             {
               name: 'Bas',
               params: { id: 5, pwd: 20 },
+              path,
             },
           ],
         },
@@ -1740,10 +1317,10 @@ it('handles differently ordered params v3', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handles differently ordered params v4', () => {
@@ -1787,6 +1364,7 @@ it('handles differently ordered params v4', () => {
             {
               name: 'Bas',
               params: { id: 5, pwd: 20 },
+              path,
             },
           ],
         },
@@ -1794,10 +1372,10 @@ it('handles differently ordered params v4', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/5/foos/res/20'));
 });
 
 it('handles simple optional params', () => {
@@ -1841,6 +1419,7 @@ it('handles simple optional params', () => {
             {
               name: 'Bas',
               params: { id: 5 },
+              path,
             },
           ],
         },
@@ -1848,10 +1427,10 @@ it('handles simple optional params', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle 2 optional params at the end v1', () => {
@@ -1895,6 +1474,7 @@ it('handle 2 optional params at the end v1', () => {
             {
               name: 'Bas',
               params: { id: 5 },
+              path,
             },
           ],
         },
@@ -1902,10 +1482,10 @@ it('handle 2 optional params at the end v1', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle 2 optional params at the end v2', () => {
@@ -1949,6 +1529,7 @@ it('handle 2 optional params at the end v2', () => {
             {
               name: 'Bas',
               params: { id: 5, nip: 10 },
+              path,
             },
           ],
         },
@@ -1956,10 +1537,10 @@ it('handle 2 optional params at the end v2', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle 2 optional params at the end v3', () => {
@@ -2004,6 +1585,7 @@ it('handle 2 optional params at the end v3', () => {
             {
               name: 'Bas',
               params: { id: 5, nip: 10, pwd: 15 },
+              path,
             },
           ],
         },
@@ -2011,10 +1593,10 @@ it('handle 2 optional params at the end v3', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle optional params in the middle v1', () => {
@@ -2059,6 +1641,7 @@ it('handle optional params in the middle v1', () => {
             {
               name: 'Bas',
               params: { id: 5, pwd: 10 },
+              path,
             },
           ],
         },
@@ -2066,10 +1649,10 @@ it('handle optional params in the middle v1', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle optional params in the middle v2', () => {
@@ -2114,6 +1697,7 @@ it('handle optional params in the middle v2', () => {
             {
               name: 'Bas',
               params: { id: 5, nip: 10, pwd: 15 },
+              path,
             },
           ],
         },
@@ -2121,10 +1705,10 @@ it('handle optional params in the middle v2', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle optional params in the middle v3', () => {
@@ -2170,6 +1754,7 @@ it('handle optional params in the middle v3', () => {
             {
               name: 'Bas',
               params: { id: 5, pwd: 10, smh: 15 },
+              path,
             },
           ],
         },
@@ -2177,10 +1762,10 @@ it('handle optional params in the middle v3', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle optional params in the middle v4', () => {
@@ -2226,6 +1811,7 @@ it('handle optional params in the middle v4', () => {
             {
               name: 'Bas',
               params: { pwd: 5, id: 10 },
+              path,
             },
           ],
         },
@@ -2233,10 +1819,10 @@ it('handle optional params in the middle v4', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle optional params in the middle v5', () => {
@@ -2282,6 +1868,7 @@ it('handle optional params in the middle v5', () => {
             {
               name: 'Bas',
               params: { nip: 5, pwd: 10, id: 15 },
+              path,
             },
           ],
         },
@@ -2289,10 +1876,10 @@ it('handle optional params in the middle v5', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('handle optional params in the beginning v1', () => {
@@ -2338,6 +1925,7 @@ it('handle optional params in the beginning v1', () => {
             {
               name: 'Bas',
               params: { nip: 5, pwd: 10, id: 15 },
+              path,
             },
           ],
         },
@@ -2345,10 +1933,10 @@ it('handle optional params in the beginning v1', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/5/10/foos/15'));
 });
 
 it('handle optional params in the beginning v2', () => {
@@ -2394,6 +1982,7 @@ it('handle optional params in the beginning v2', () => {
             {
               name: 'Bas',
               params: { nip: 5, pwd: 10, id: 15 },
+              path,
             },
           ],
         },
@@ -2401,10 +1990,10 @@ it('handle optional params in the beginning v2', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/5/10/foos/15'));
 });
 
 it('merges parent patterns if needed', () => {
@@ -2434,6 +2023,7 @@ it('merges parent patterns if needed', () => {
             {
               name: 'Baz',
               params: { qux: 'babel' },
+              path,
             },
           ],
         },
@@ -2441,10 +2031,10 @@ it('merges parent patterns if needed', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/foo/42/baz/babel'));
 });
 
 it('ignores extra slashes in the pattern', () => {
@@ -2470,6 +2060,7 @@ it('ignores extra slashes in the pattern', () => {
             {
               name: 'Bar',
               params: { id: '42' },
+              path,
             },
           ],
         },
@@ -2477,10 +2068,10 @@ it('ignores extra slashes in the pattern', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('matches wildcard patterns at root', () => {
@@ -2499,13 +2090,13 @@ it('matches wildcard patterns at root', () => {
   };
 
   const state = {
-    routes: [{ name: '404' }],
+    routes: [{ name: '404', path }],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/404'));
 });
 
 it('matches wildcard patterns at nested level', () => {
@@ -2535,7 +2126,7 @@ it('matches wildcard patterns at nested level', () => {
               name: 'Bar',
               params: { id: '42' },
               state: {
-                routes: [{ name: '404' }],
+                routes: [{ name: '404', path }],
               },
             },
           ],
@@ -2544,10 +2135,10 @@ it('matches wildcard patterns at nested level', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/bar/42/404'));
 });
 
 it('matches wildcard patterns at nested level with exact', () => {
@@ -2580,7 +2171,7 @@ it('matches wildcard patterns at nested level with exact', () => {
             {
               name: 'Bar',
               state: {
-                routes: [{ name: '404' }],
+                routes: [{ name: '404', path }],
               },
             },
           ],
@@ -2589,10 +2180,10 @@ it('matches wildcard patterns at nested level with exact', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/404'));
 });
 
 it('tries to match wildcard patterns at the end', () => {
@@ -2623,7 +2214,7 @@ it('tries to match wildcard patterns at the end', () => {
               name: 'Bar',
               params: { id: '42' },
               state: {
-                routes: [{ name: 'Test' }],
+                routes: [{ name: 'Test', path }],
               },
             },
           ],
@@ -2632,10 +2223,10 @@ it('tries to match wildcard patterns at the end', () => {
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
 it('uses nearest parent wildcard match for unmatched paths', () => {
@@ -2661,23 +2252,23 @@ it('uses nearest parent wildcard match for unmatched paths', () => {
       {
         name: 'Foo',
         state: {
-          routes: [{ name: '404' }],
+          routes: [{ name: '404', path }],
         },
       },
     ],
   };
 
-  expect(getStateFromPath(path, config)).toEqual(state);
-  expect(getStateFromPath(getPathFromState(state, config), config)).toEqual(
-    state
-  );
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(changePath(state, '/404'));
 });
 
 it('throws if two screens map to the same pattern', () => {
   const path = '/bar/42/baz/test';
 
   expect(() =>
-    getStateFromPath(path, {
+    getStateFromPath<object>(path, {
       screens: {
         Foo: {
           screens: {
@@ -2697,7 +2288,7 @@ it('throws if two screens map to the same pattern', () => {
   );
 
   expect(() =>
-    getStateFromPath(path, {
+    getStateFromPath<object>(path, {
       screens: {
         Foo: {
           screens: {
@@ -2714,43 +2305,29 @@ it('throws if two screens map to the same pattern', () => {
   ).not.toThrow();
 });
 
-it('throws if wildcard is specified with legacy config', () => {
-  const path = '/bar/42/baz/test';
+it('correctly applies initialRouteName for config with similar route names', () => {
+  const path = '/weekly-earnings';
+
   const config = {
-    Foo: {
-      screens: {
-        Bar: {
-          path: '/bar/:id/',
-          screens: {
-            Baz: 'baz',
+    screens: {
+      RootTabs: {
+        screens: {
+          HomeTab: {
+            screens: {
+              Home: '',
+              WeeklyEarnings: 'weekly-earnings',
+              EventDetails: 'event-details/:eventId',
+            },
+          },
+          EarningsTab: {
+            initialRouteName: 'Earnings',
+            path: 'earnings',
+            screens: {
+              Earnings: '',
+              WeeklyEarnings: 'weekly-earnings',
+            },
           },
         },
-        404: '*',
-      },
-    },
-  };
-
-  // @ts-expect-error: legacy config
-  expect(() => getStateFromPath(path, config)).toThrow(
-    "Please update your config to the new format to use wildcard pattern ('*')"
-  );
-});
-
-it('supports legacy config', () => {
-  const path = '/foo/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true';
-  const config = {
-    Foo: 'foo',
-    Bar: 'bar/:type/:fruit',
-    Baz: {
-      path: 'baz/:author',
-      parse: {
-        author: (author: string) =>
-          author.replace(/^\w/, (c) => c.toUpperCase()),
-        count: Number,
-        valid: Boolean,
-      },
-      stringify: {
-        author: (author: string) => author.toLowerCase(),
       },
     },
   };
@@ -2758,22 +2335,16 @@ it('supports legacy config', () => {
   const state = {
     routes: [
       {
-        name: 'Foo',
+        name: 'RootTabs',
         state: {
           routes: [
             {
-              name: 'Bar',
-              params: { fruit: 'apple', type: 'sweet' },
+              name: 'HomeTab',
               state: {
                 routes: [
                   {
-                    name: 'Baz',
-                    params: {
-                      author: 'Jane',
-                      count: 10,
-                      answer: '42',
-                      valid: true,
-                    },
+                    name: 'WeeklyEarnings',
+                    path,
                   },
                 ],
               },
@@ -2784,40 +2355,122 @@ it('supports legacy config', () => {
     ],
   };
 
-  // @ts-expect-error: legacy config
-  expect(getStateFromPath(path, config)).toEqual(state);
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
 });
 
-it("throws when using 'initialRouteName' or 'screens' with legacy config", () => {
+it('correctly applies initialRouteName for config with similar route names v2', () => {
+  const path = '/earnings/weekly-earnings';
+
+  const config = {
+    screens: {
+      RootTabs: {
+        screens: {
+          HomeTab: {
+            initialRouteName: 'Home',
+            screens: {
+              Home: '',
+              WeeklyEarnings: 'weekly-earnings',
+            },
+          },
+          EarningsTab: {
+            initialRouteName: 'Earnings',
+            path: 'earnings',
+            screens: {
+              Earnings: '',
+              WeeklyEarnings: 'weekly-earnings',
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'RootTabs',
+        state: {
+          routes: [
+            {
+              name: 'EarningsTab',
+              state: {
+                index: 1,
+                routes: [
+                  {
+                    name: 'Earnings',
+                  },
+                  {
+                    name: 'WeeklyEarnings',
+                    path,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+  expect(
+    getStateFromPath<object>(getPathFromState<object>(state, config), config)
+  ).toEqual(state);
+});
+
+it('throws when invalid properties are specified in the config', () => {
   expect(() =>
-    getStateFromPath('/whatever', {
-      initialRouteName: 'foo',
-      // @ts-expect-error: legacy config
+    getStateFromPath<object>('', {
       Foo: 'foo',
-      Bar: 'bar/:type/:fruit',
-    })
-  ).toThrow('Found invalid keys in the configuration object.');
+      Bar: {
+        path: 'bar',
+      },
+    } as any)
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Found invalid properties in the configuration:
+    - Foo
+    - Bar
+
+    Did you forget to specify them under a 'screens' property?
+
+    You can only specify the following properties:
+    - initialRouteName
+    - screens
+
+    See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
+  `);
 
   expect(() =>
-    getStateFromPath('/whatever', {
+    getStateFromPath<object>('', {
       screens: {
-        Test: 'test',
+        Foo: 'foo',
+        Bar: {
+          path: 'bar',
+        },
+        Baz: {
+          Qux: {
+            path: 'qux',
+          },
+        },
       },
-      // @ts-expect-error: legacy config
-      Foo: 'foo',
-      Bar: 'bar/:type/:fruit',
-    })
-  ).toThrow('Found invalid keys in the configuration object.');
+    } as any)
+  ).toThrowErrorMatchingInlineSnapshot(`
+    "Found invalid properties in the configuration:
+    - Qux
 
-  expect(() =>
-    getStateFromPath('/whatever', {
-      initialRouteName: 'foo',
-      screens: {
-        Test: 'test',
-      },
-      // @ts-expect-error: legacy config
-      Foo: 'foo',
-      Bar: 'bar/:type/:fruit',
-    })
-  ).toThrow('Found invalid keys in the configuration object.');
+    Did you forget to specify them under a 'screens' property?
+
+    You can only specify the following properties:
+    - initialRouteName
+    - screens
+    - path
+    - exact
+    - stringify
+    - parse
+
+    See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
+  `);
 });

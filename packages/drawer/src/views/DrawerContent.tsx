@@ -1,12 +1,24 @@
 import * as React from 'react';
-import DrawerItemList from './DrawerItemList';
-import DrawerContentScrollView from './DrawerContentScrollView';
-import type { DrawerContentComponentProps } from '../types';
 
-export default function DrawerContent(props: DrawerContentComponentProps) {
+import type { DrawerContentComponentProps } from '../types';
+import DrawerContentScrollView from './DrawerContentScrollView';
+import DrawerItemList from './DrawerItemList';
+
+export default function DrawerContent({
+  descriptors,
+  state,
+  ...rest
+}: DrawerContentComponentProps) {
+  const { drawerContentStyle, drawerContentContainerStyle } =
+    descriptors[state.routes[state.index].key].options;
+
   return (
-    <DrawerContentScrollView {...props}>
-      <DrawerItemList {...props} />
+    <DrawerContentScrollView
+      {...rest}
+      contentContainerStyle={drawerContentContainerStyle}
+      style={drawerContentStyle}
+    >
+      <DrawerItemList descriptors={descriptors} state={state} {...rest} />
     </DrawerContentScrollView>
   );
 }
