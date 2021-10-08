@@ -200,8 +200,13 @@ type NavigationHelpersCommon<
    */
   navigate<RouteName extends keyof ParamList>(
     options:
-      | { key: string; params?: ParamList[RouteName] }
-      | { name: RouteName; key?: string; params: ParamList[RouteName] }
+      | { key: string; params?: ParamList[RouteName]; merge?: boolean }
+      | {
+          name: RouteName;
+          key?: string;
+          params: ParamList[RouteName];
+          merge?: boolean;
+        }
   ): void;
 
   /**
@@ -632,10 +637,9 @@ export type PathConfig<ParamList extends {}> = {
 };
 
 export type PathConfigMap<ParamList extends {}> = {
-  [RouteName in keyof ParamList]?: ParamList[RouteName] extends NavigatorScreenParams<
-    infer T,
-    any
-  >
+  [RouteName in keyof ParamList]?: NonNullable<
+    ParamList[RouteName]
+  > extends NavigatorScreenParams<infer T, any>
     ? string | PathConfig<T>
     : string | Omit<PathConfig<{}>, 'screens' | 'initialRouteName'>;
 };

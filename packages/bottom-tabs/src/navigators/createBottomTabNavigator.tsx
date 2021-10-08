@@ -54,8 +54,22 @@ function BottomTabNavigator({
       tabBarLabelStyle: tabBarOptions.labelStyle,
       tabBarIconStyle: tabBarOptions.iconStyle,
       tabBarItemStyle: tabBarOptions.tabStyle,
-      tabBarLabelPosition: tabBarOptions.labelPosition,
-      tabBarAdaptive: tabBarOptions.adaptive,
+      tabBarLabelPosition:
+        tabBarOptions.labelPosition ??
+        (tabBarOptions.adaptive === false ? 'below-icon' : undefined),
+      tabBarStyle: [
+        { display: tabBarOptions.tabBarVisible ? 'none' : 'flex' },
+        defaultScreenOptions.tabBarStyle,
+      ],
+    });
+
+    (
+      Object.keys(defaultScreenOptions) as (keyof BottomTabNavigationOptions)[]
+    ).forEach((key) => {
+      if (defaultScreenOptions[key] === undefined) {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete defaultScreenOptions[key];
+      }
     });
 
     warnOnce(
@@ -64,7 +78,7 @@ function BottomTabNavigator({
         defaultScreenOptions,
         null,
         2
-      )}\n\nSee https://reactnavigation.org/docs/6.x/bottom-tab-navigator#options for more details.`
+      )}\n\nSee https://reactnavigation.org/docs/bottom-tab-navigator#options for more details.`
     );
   }
 
@@ -73,7 +87,7 @@ function BottomTabNavigator({
 
     warnOnce(
       true,
-      `Bottom Tab Navigator: 'lazy' in props is deprecated. Move it to 'screenOptions' instead.`
+      `Bottom Tab Navigator: 'lazy' in props is deprecated. Move it to 'screenOptions' instead.\n\nSee https://reactnavigation.org/docs/bottom-tab-navigator/#lazy for more details.`
     );
   }
 
